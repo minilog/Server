@@ -1,0 +1,91 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Game Server.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Boss.cpp
+  Boundary.cpp
+  Brick.cpp
+  BrickNormal.cpp
+  Bullet.cpp
+c:\users\minh\desktop\server\game server\bullet.cpp(42): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\bullet.cpp(44): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  Entity.cpp
+c:\users\minh\desktop\server\game server\entity.cpp(28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(41): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(42): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(43): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(44): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(109): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(114): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(119): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\minh\desktop\server\game server\entity.cpp(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  GameCollision.cpp
+  GameLog.cpp
+  GameMap.cpp
+c:\users\minh\desktop\server\game server\gamemap.cpp(9): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\gamemap.cpp(41): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\gamemap.cpp(45): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\gamemap.cpp(55): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\gamemap.cpp(57): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\gamemap.cpp(78): warning C4244: 'argument': conversion from 'size_t' to 'FLOAT', possible loss of data
+  GameTime.cpp
+  Item.cpp
+  base64.cpp
+c:\users\minh\desktop\server\game server\mapreader\base64.cpp(96): warning C4267: '=': conversion from 'size_t' to 'unsigned char', possible loss of data
+c:\users\minh\desktop\server\game server\mapreader\base64.cpp(113): warning C4267: '=': conversion from 'size_t' to 'unsigned char', possible loss of data
+  tinyxml2.cpp
+  TmxEllipse.cpp
+  TmxImage.cpp
+  TmxImageLayer.cpp
+  TmxLayer.cpp
+  TmxMap.cpp
+  TmxObject.cpp
+  TmxObjectGroup.cpp
+  Generating Code...
+  Compiling...
+  TmxPolygon.cpp
+  TmxPolyline.cpp
+  TmxPropertySet.cpp
+c:\users\minh\desktop\server\game server\mapreader\tmxpropertyset.cpp(87): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  TmxTerrain.cpp
+  TmxTerrainArray.cpp
+  TmxTile.cpp
+  TmxTileLayer.cpp
+  TmxTileOffset.cpp
+  TmxTileset.cpp
+  TmxUtil.cpp
+  MemoryBitStream.cpp
+  MetalBrick.cpp
+  NetWorkManager.cpp
+c:\users\minh\desktop\server\game server\networkmanager.cpp(25): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\networkmanager.cpp(56): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\networkmanager.cpp(125): warning C4018: '<': signed/unsigned mismatch
+  NPC.cpp
+c:\users\minh\desktop\server\game server\npc.cpp(78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\minh\desktop\server\game server\npc.cpp(96): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\npc.cpp(98): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  Packet.cpp
+  PlayerServer.cpp
+c:\users\minh\desktop\server\game server\playerserver.cpp(66): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\playerserver.cpp(68): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\minh\desktop\server\game server\playerserver.cpp(173): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  ProtectPlayer.cpp
+  QuadTree.cpp
+  TCPServer.cpp
+c:\users\minh\desktop\server\game server\tcpserver.cpp(29): warning C4007: 'main': must be '__cdecl'
+c:\users\minh\desktop\server\game server\tcpserver.cpp(30): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\minh\desktop\server\game server\tcpserver.cpp(69): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+c:\users\minh\desktop\server\game server\tcpserver.cpp(41): warning C4101: 'msg': unreferenced local variable
+  UpgradeItem.cpp
+  Generating Code...
+  Compiling...
+  Water.cpp
+  World.cpp
+c:\users\minh\desktop\server\game server\world.cpp(58): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+c:\users\minh\desktop\server\game server\world.cpp(333): warning C4018: '>': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\world.cpp(369): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\world.cpp(494): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\world.cpp(515): warning C4018: '<': signed/unsigned mismatch
+c:\users\minh\desktop\server\game server\world.cpp(520): warning C4018: '<': signed/unsigned mismatch
+  WorldState.cpp
+c:\users\minh\desktop\server\game server\worldstate.cpp(43): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  miniz.c
+  Game Server.vcxproj -> C:\Users\Minh\Desktop\Server\Debug\Server.exe

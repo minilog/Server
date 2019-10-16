@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{5644FEC4-6E59-4517-8942-4D145D2A944D}</ProjectGuid>
+    <RootNamespace>GameServer</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>Server</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CallingConvention>StdCall</CallingConvention>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;dinput8.lib;winmm.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="Boundary.h" />
+    <ClInclude Include="Brick.h" />
+    <ClInclude Include="BrickNormal.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="GameCollision.h" />
+    <ClInclude Include="GameLog.h" />
+    <ClInclude Include="GameMap.h" />
+    <ClInclude Include="GameTime.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="MapReader\base64.h" />
+    <ClInclude Include="MapReader\tinyxml2.h" />
+    <ClInclude Include="MapReader\TmxEllipse.h" />
+    <ClInclude Include="MapReader\TmxImage.h" />
+    <ClInclude Include="MapReader\TmxImageLayer.h" />
+    <ClInclude Include="MapReader\TmxLayer.h" />
+    <ClInclude Include="MapReader\TmxMap.h" />
+    <ClInclude Include="MapReader\TmxMapTile.h" />
+    <ClInclude Include="MapReader\TmxObject.h" />
+    <ClInclude Include="MapReader\TmxObjectGroup.h" />
+    <ClInclude Include="MapReader\TmxPoint.h" />
+    <ClInclude Include="MapReader\TmxPolygon.h" />
+    <ClInclude Include="MapReader\TmxPolyline.h" />
+    <ClInclude Include="MapReader\TmxPropertySet.h" />
+    <ClInclude Include="MapReader\TmxTerrain.h" />
+    <ClInclude Include="MapReader\TmxTerrainArray.h" />
+    <ClInclude Include="MapReader\TmxTile.h" />
+    <ClInclude Include="MapReader\TmxTileLayer.h" />
+    <ClInclude Include="MapReader\TmxTileOffset.h" />
+    <ClInclude Include="MapReader\TmxTileset.h" />
+    <ClInclude Include="MapReader\TmxUtil.h" />
+    <ClInclude Include="MapReader\zconf.h" />
+    <ClInclude Include="MapReader\zlib.h" />
+    <ClInclude Include="MemoryBitStream.h" />
+    <ClInclude Include="MetalBrick.h" />
+    <ClInclude Include="NetWorkManager.h" />
+    <ClInclude Include="NPC.h" />
+    <ClInclude Include="Packet.h" />
+    <ClInclude Include="PlayerServer.h" />
+    <ClInclude Include="ProtectPlayer.h" />
+    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="SocketAddress.h" />
+    <ClInclude Include="SocketUtil.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TCPSocket.h" />
+    <ClInclude Include="UpgradeItem.h" />
+    <ClInclude Include="Water.h" />
+    <ClInclude Include="World.h" />
+    <ClInclude Include="WorldState.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Boundary.cpp" />
+    <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="BrickNormal.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="GameCollision.cpp" />
+    <ClCompile Include="GameLog.cpp" />
+    <ClCompile Include="GameMap.cpp" />
+    <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="MapReader\base64.cpp" />
+    <ClCompile Include="MapReader\miniz.c" />
+    <ClCompile Include="MapReader\tinyxml2.cpp" />
+    <ClCompile Include="MapReader\TmxEllipse.cpp" />
+    <ClCompile Include="MapReader\TmxImage.cpp" />
+    <ClCompile Include="MapReader\TmxImageLayer.cpp" />
+    <ClCompile Include="MapReader\TmxLayer.cpp" />
+    <ClCompile Include="MapReader\TmxMap.cpp" />
+    <ClCompile Include="MapReader\TmxObject.cpp" />
+    <ClCompile Include="MapReader\TmxObjectGroup.cpp" />
+    <ClCompile Include="MapReader\TmxPolygon.cpp" />
+    <ClCompile Include="MapReader\TmxPolyline.cpp" />
+    <ClCompile Include="MapReader\TmxPropertySet.cpp" />
+    <ClCompile Include="MapReader\TmxTerrain.cpp" />
+    <ClCompile Include="MapReader\TmxTerrainArray.cpp" />
+    <ClCompile Include="MapReader\TmxTile.cpp" />
+    <ClCompile Include="MapReader\TmxTileLayer.cpp" />
+    <ClCompile Include="MapReader\TmxTileOffset.cpp" />
+    <ClCompile Include="MapReader\TmxTileset.cpp" />
+    <ClCompile Include="MapReader\TmxUtil.cpp" />
+    <ClCompile Include="MemoryBitStream.cpp" />
+    <ClCompile Include="MetalBrick.cpp" />
+    <ClCompile Include="NetWorkManager.cpp" />
+    <ClCompile Include="NPC.cpp" />
+    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="PlayerServer.cpp" />
+    <ClCompile Include="ProtectPlayer.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="TCPServer.cpp" />
+    <ClCompile Include="UpgradeItem.cpp" />
+    <ClCompile Include="Water.cpp" />
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="WorldState.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MapReader\Tmx.h.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
