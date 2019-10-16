@@ -316,6 +316,9 @@
     <ClCompile Include="PlayerServer.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Yato</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MapReader\Tmx.h.in">

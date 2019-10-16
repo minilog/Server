@@ -190,6 +190,7 @@
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapReader\base64.cpp" />
     <ClCompile Include="MapReader\miniz.c" />
     <ClCompile Include="MapReader\tinyxml2.cpp" />
