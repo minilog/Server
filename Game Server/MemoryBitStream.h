@@ -1,3 +1,5 @@
+#pragma once
+
 
 #include <cstdint>
 #include <cstdlib>
@@ -9,26 +11,6 @@
 //#include "Bullet.h"
 
 
-
-namespace Define
-{
-	const int bitofTypePacket = 4;
-	const int bitofID = 11;
-	const int bitofLocation = 12;
-
-	const int WelcomePacket = 1;
-	const int UpdateCountPlayer = 2;
-	const int LetStart = 3;
-	const int TankPacket = 4;
-	const int WorldStatePacket = 5;
-	const int InputPacket = 6;
-	const int RequestName = 7;
-	const int ChooseRoom = 8;
-	const int ExitGame = 9;
-	const int CreateRoom = 10;
-	const int GameOver = 11;
-	const int OutRoom = 12;
-}
 
 //
 //inline uint32_t ConvertToFixed( float inNumber, float inMin, float inPrecision )

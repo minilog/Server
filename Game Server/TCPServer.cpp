@@ -57,12 +57,14 @@ int main()
 			_lastTime += tickPerFrame;
 			net_work->Update(1.0f / 60);//_detalTime
 			temp++;
-			if (temp == 60)
+			if (temp == /*60*/1)
 			{
 				temp1++;
 				temp = 0;
-				printf("%i\t%f\n", temp1, _detalTime);
+				//printf("%i\t%f\n", temp1, _detalTime);
+				printf("Server time: %i\n", (int)GetTickCount());
 			}
+
 		}
 		else
 		{

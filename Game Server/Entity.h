@@ -2,6 +2,8 @@
 
 #include <d3dx9.h>
 #include "MemoryBitStream.h"
+#include "Define.h"
+
 class PlayerServer;
 enum Direction
 {

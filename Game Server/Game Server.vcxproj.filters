@@ -1,328 +1,327 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Map Reader">
-      <UniqueIdentifier>{f377877b-095d-49bd-a7f3-5e596db465d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Network TCP/IP">
-      <UniqueIdentifier>{82e8bb7b-9f8a-4c4b-922f-e161333bddcd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework">
-      <UniqueIdentifier>{a09ba30d-399d-464c-91bd-1d4e74f5ac9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Objects">
-      <UniqueIdentifier>{7881de60-99f0-4854-82af-b86e8873e308}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Objects\Items">
-      <UniqueIdentifier>{a1c28e4c-547d-4b8e-8eb9-092d7a62a1b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game Objects\Bricks">
-      <UniqueIdentifier>{29c2e16a-171b-40ff-a815-801d4477af21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Yato">
       <UniqueIdentifier>{2d337f18-8137-4d8e-bd9f-1ac5668b0207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old">
+      <UniqueIdentifier>{af5a0b46-6c0f-4a13-851c-a2001b8c450d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\Map Reader">
+      <UniqueIdentifier>{f377877b-095d-49bd-a7f3-5e596db465d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\Network TCP/IP">
+      <UniqueIdentifier>{82e8bb7b-9f8a-4c4b-922f-e161333bddcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\Game Objects">
+      <UniqueIdentifier>{7881de60-99f0-4854-82af-b86e8873e308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\Game Objects\Items">
+      <UniqueIdentifier>{a1c28e4c-547d-4b8e-8eb9-092d7a62a1b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\Game Objects\Bricks">
+      <UniqueIdentifier>{29c2e16a-171b-40ff-a815-801d4477af21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\Framework">
+      <UniqueIdentifier>{a09ba30d-399d-464c-91bd-1d4e74f5ac9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Old\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapReader\TmxImage.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxImageLayer.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxLayer.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxMap.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxMapTile.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxObject.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxObjectGroup.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxPoint.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxPolygon.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxPolyline.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxPropertySet.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxTerrain.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxTerrainArray.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxTile.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxTileLayer.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxTileOffset.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxTileset.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxUtil.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\zconf.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\zlib.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\base64.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\tinyxml2.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MapReader\TmxEllipse.h">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClInclude>
     <ClInclude Include="MemoryBitStream.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="SocketAddress.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="SocketUtil.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="TCPSocket.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="Packet.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="GameCollision.h">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClInclude>
     <ClInclude Include="GameLog.h">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClInclude>
     <ClInclude Include="GameMap.h">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClInclude>
     <ClInclude Include="GameTime.h">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClInclude>
     <ClInclude Include="NetWorkManager.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="WorldState.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
     <ClInclude Include="Brick.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="UpgradeItem.h">
-      <Filter>Game Objects\Items</Filter>
+      <Filter>Old\Game Objects\Items</Filter>
     </ClInclude>
     <ClInclude Include="ProtectPlayer.h">
-      <Filter>Game Objects\Items</Filter>
+      <Filter>Old\Game Objects\Items</Filter>
     </ClInclude>
     <ClInclude Include="Boundary.h">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClInclude>
     <ClInclude Include="BrickNormal.h">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClInclude>
     <ClInclude Include="MetalBrick.h">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClInclude>
     <ClInclude Include="Water.h">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Boss.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="NPC.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="PlayerServer.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>Yato</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapReader\TmxImageLayer.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxLayer.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxMap.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxObject.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxObjectGroup.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxPolygon.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxPolyline.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxPropertySet.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxTerrain.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxTerrainArray.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxTile.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxTileLayer.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxTileOffset.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxTileset.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxUtil.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\base64.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\miniz.c">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\tinyxml2.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxEllipse.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MapReader\TmxImage.cpp">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </ClCompile>
     <ClCompile Include="MemoryBitStream.cpp">
-      <Filter>Network TCP/IP</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet.cpp">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClCompile>
     <ClCompile Include="GameCollision.cpp">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClCompile>
     <ClCompile Include="GameLog.cpp">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClCompile>
     <ClCompile Include="GameMap.cpp">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClCompile>
     <ClCompile Include="QuadTree.cpp">
-      <Filter>Framework</Filter>
+      <Filter>Old\Framework</Filter>
     </ClCompile>
     <ClCompile Include="GameTime.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="NetWorkManager.cpp">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Framework</Filter>
     </ClCompile>
     <ClCompile Include="WorldState.cpp">
-      <Filter>Network TCP/IP</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>Network TCP/IP</Filter>
-    </ClCompile>
-    <ClCompile Include="TCPServer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Old\Network TCP/IP</Filter>
     </ClCompile>
     <ClCompile Include="Brick.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="ProtectPlayer.cpp">
-      <Filter>Game Objects\Items</Filter>
+      <Filter>Old\Game Objects\Items</Filter>
     </ClCompile>
     <ClCompile Include="UpgradeItem.cpp">
-      <Filter>Game Objects\Items</Filter>
+      <Filter>Old\Game Objects\Items</Filter>
     </ClCompile>
     <ClCompile Include="Boundary.cpp">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClCompile>
     <ClCompile Include="BrickNormal.cpp">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClCompile>
     <ClCompile Include="MetalBrick.cpp">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClCompile>
     <ClCompile Include="Water.cpp">
-      <Filter>Game Objects\Bricks</Filter>
+      <Filter>Old\Game Objects\Bricks</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="Boss.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="NPC.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="PlayerServer.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Old\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Yato</Filter>
+    <ClCompile Include="NetWorkManager.cpp">
+      <Filter>Old\Network TCP/IP</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>Old\Network TCP/IP</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPServer.cpp">
+      <Filter>Old</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MapReader\Tmx.h.in">
-      <Filter>Map Reader</Filter>
+      <Filter>Old\Map Reader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

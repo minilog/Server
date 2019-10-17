@@ -1,4 +1,5 @@
 #include "Boss.h"
+#include "Define.h"
 
 
 Boss::Boss(int ID, D3DXVECTOR2 pos)

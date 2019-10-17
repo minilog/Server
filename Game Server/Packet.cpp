@@ -1,5 +1,6 @@
 #include "Packet.h"
 #include "MemoryBitStream.h"
+#include "Define.h"
 
 
 Packet::Packet(InputMemoryBitStream &is, int room, int type)
