@@ -3,6 +3,11 @@
 #include "SocketUtil.h"
 #include "GameLog.h"
 
+NetWorkManager::NetWorkManager()
+{
+	CreateSocketServer();
+}
+
 void NetWorkManager::Handle_Packet()
 {
 	// nếu có Packet trong Queue thì xử lý dữ liệu của nó
@@ -19,7 +24,7 @@ void NetWorkManager::Handle_Exit(TCPSocketPtr sock)
 {
 	// xác định socket của Client có ID gì và đang ở Room nào
 	int id = sock->ID;
-	int id_room = sock->ID_Room;
+	int id_room = sock->RoomID;
 
 	// xóa socket của Client đó ra khỏi danh sách readSocket
 	for (int i = 0; i < readBlockSockets.size(); i++)
@@ -32,12 +37,14 @@ void NetWorkManager::Handle_Exit(TCPSocketPtr sock)
 	}
 	
 	// nếu Client đó đang ở trong 1 Phòng chơi, Phòng chơi đó xử lý Thoát Game của người chơi đó
-	if (id_room > 0)
-		for (auto ele : mListWorld_room)
-		{
-			if (ele->ID == id_room)
-				ele->Handle_Exit(id);
-		}
+	//if (id_room >= 0)
+	//{
+	//	for (auto room : mListWorld_room)
+	//	{
+	//		if (room->ID == id_room)
+	//			room->Handle_Exit(id);
+	//	}
+	//}
 
 	printf("\nSOMEONE LOGOUT");
 
@@ -45,78 +52,49 @@ void NetWorkManager::Handle_Exit(TCPSocketPtr sock)
 
 void NetWorkManager::DeleteWorld(int i)
 {
-	// xóa World đó ra khỏi danh sách World, ngoại trừ Wolrd 1 và World 2
-	if (mListWorld_room[i]->name._Equal("Room 1") || mListWorld_room[i]->name._Equal("Room 2"))
-	{
+	mListWorld_room.erase(mListWorld_room.begin() + i);
 
-	}
-	else
-	{
-		mListWorld_room.erase(mListWorld_room.begin() + i);
-		i--;
-	}
-
-	// xóa luôn các Socket của các Client đang ở trong Wolrd đó
+	// xóa các Socket Người Chơi đang ở trong Phòng Chơi đó
 	for (int j = 0; j < readBlockSockets.size(); j++)
 	{
-		if (readBlockSockets[j]->ID_Room == mListWorld_room[i]->ID)
+		if (readBlockSockets[j]->RoomID == mListWorld_room[i]->ID)
 		{
 			readBlockSockets.erase(readBlockSockets.begin() + j);
 			j--;
 		}
 
 	}
-
-	mListWorld_room[i]->isDelete = false;
 }
 
 void NetWorkManager::CreateRoomAndAdd(TCPSocketPtr soc)
 {
-	// tạo 1 Wolrd mới, đưa vào danh sách World
-	World* world = new World();
-	mListWorld_room.push_back(world);
+	// tạo 1 Phòng Chơi mới, đưa vào danh sách Phòng Chơi
+	World* room = new World();
+	mListWorld_room.push_back(room);
 
-	// gán ID cho World mới được tạo, World 1 (ID = 1), World 2(ID = 2), World 3 (ID = 3),...
-	int i = 2;
+	// gán ID cho Phòng Chơi mới được tạo
+	int i = 0;
 	while (1)
 	{
-		i++;
 		bool flag = false;
-		for (auto ele : mListWorld_room)
-			if (ele->ID == i) 
+
+		for (auto room : mListWorld_room)
+			if (room->ID == i) 
 				flag = true;
+
 		if (!flag) 
 			break;
+
+		i++;
 	}
-	world->ID = i;
-	world->name = "Room " + std::to_string(i);
+	room->ID = i;
+	room->name = "Room: " + std::to_string(i);
 
-	// gán ID World đó cho Socket tạo ra nó
-	soc->ID_Room = i;
+	// người chơi có ID phòng
+	soc->RoomID = i;
 
-	// thêm Socket đó vào World
-	world->AddMember(soc);
-}
-
-NetWorkManager::NetWorkManager()
-{
-	CreateSocketServer();
-
-	//tạo wolrd 1
-	World* world = new World(); 
-	world->ID = 1; 
-	world->name = "Room 1"; 
-	mListWorld_room.push_back(world);
-
-	// tạo world 2
-	World* world1 = new World(); world1->ID = 2;  
-	world1->name = "Room 2"; 
-	mListWorld_room.push_back(world1);
-}
-
-
-NetWorkManager::~NetWorkManager()
-{
+	// thêm người chơi vào phòng chơi
+	room->AddMember(soc);
 }
 
 int count_to_send = 0;
@@ -136,7 +114,7 @@ void NetWorkManager::Update(float dt)
 			//mListWorld_room[i]->CheckCollision(dt);
 			//mListWorld_room[i]->Update(dt);
 
-			// gửi dữ liệu của World cho các Client mỗi 3 lần cập nhật
+			//// gửi dữ liệu của World cho các Client mỗi 3 lần cập nhật
 			//if (count_to_send == 3)
 			//{
 			//	mListWorld_room[i]->SendWorld();
@@ -165,7 +143,7 @@ void NetWorkManager::ReceivePacket()
 	{
 		// duyệt từng Socket để nhận Dữ Liệu 
 		for (const TCPSocketPtr& socket : readableSockets) {
-			// nếu là Server Socket thì thêm Client Socket vừa Connect vào
+			// nếu là Server Socket => thêm Client Socket vừa Connect vào
 			if (socket == socket_sever)
 			{
 				ProcessNewClient();
@@ -187,120 +165,70 @@ void NetWorkManager::ReceivePacket()
 					int packetType = 0;
 					is.Read(packetType, Define::bitofTypePacket);
 
-					// packet là ExitGame của Người Chơi này
+					// packet là Thoát Game...
 					if (packetType == Define::ExitGame)
 					{
+						// xử lý Thoát Game của người chơi này
 						Handle_Exit(socket);
 						continue;
 					}
 
-					// packetType là yêu cầu SyncTime
+					// packetType là yêu cầu Đồng Bộ Thời Gian...
 					if (packetType == Define::SyncTime)
 					{
 						// NReceived để chắc chắn Client nhận đúng Packet cần nhận
 						int NReceived = 0;
 						is.Read(NReceived, 32);
-						Send_SyncTimePacket(socket, NReceived);
+						// gửi lại Người Chơi yêu cầu Đồng Bộ Thời Gian thời gian của Server này
+						Send_SyncTime(socket, NReceived);
 					}
 
-				//	// nếu Client Socket đang chưa vào Phòng Chơi thì ... 
-				//	if (socket->ID_Room == 0)
-				//	{
-				//		// packetType là UpdateCountPlayer thì gửi lại Client Socket đó
-				//		// packetType = UpdateCountPlayer
-				//		// số World hiện có
-				//		// và số Người chơi hiện có, tên, Game đã bắt đầu hay chưa của World đó
-				//		if (packetType == Define::UpdateCountPlayer)
-				//		{
-				//			OutputMemoryBitStream os;
-				//			os.Write(Define::UpdateCountPlayer, Define::bitofTypePacket);
-				//			os.Write(mListWorld_room.size(), Define::bitofTypePacket);
-				//			for (auto ele : mListWorld_room)
-				//			{
-				//				os.Write(ele->listClient.size(), Define::bitofTypePacket);
-				//				os.Write(ele->name);
-				//				os.Write(ele->isStart);
-				//			}
-				//			socket->Send(os.GetBufferPtr(), os.GetByteLength());
-				//			printf("Gui cho 1 Client - Cap nhat so luong nguoi choi");
-				//		}
-				//		// packetType là ChooseRoom, thì đọc Dữ Liệu:
-				//		// room nào được chọn => gán Client Socket này có ID Room của Room được chọn
-				//		else if (packetType == Define::ChooseRoom)
-				//		{
-				//			int room_selected = 0;
-				//			is.Read(room_selected, Define::bitofTypePacket);
-				//			socket->ID_Room = room_selected;
-				//			
-				//			// Room được chọn thêm Client Socket này vào
-				//			mListWorld_room[room_selected - 1]->AddMember(socket);
-				//		}
-				//		// packetType là CreateRoom, thì chạy hàm Thêm Phòng với tham số là Client Socket này
-				//		else if (packetType == Define::CreateRoom)
-				//		{
-				//			CreateRoomAndAdd(socket);
-				//		}
-				//	}
-				//	// nếu Người chơi đang ở trong 1 Room
-				//	else
-				//	{
-				//		// xác đinh Room của Người Chơi đang ở trong...
-				//		for (auto room : mListWorld_room)
-				//		{
-				//			if (room->ID == socket->ID_Room)
-				//			{
-				//				// nếu Room đã Bắt Đầu...
-				//				if (room->isStart)
-				//				{
-				//					// packetType là UpdateCountPlayer thì Room gọi hàm Tạo Nhân Vật và Gửi đi
-				//					if (packetType == Define::UpdateCountPlayer)
-				//					{
-				//						room->CreatePlayerAndSend();
-				//					}
+					// packetType là cập nhật số lượng người chơi...
+					if (packetType == Define::UpdateCountPlayer)
+					{
+						// người chơi đang ở sảnh chọn phòng chơi...
+						if (socket->RoomID == -1)
+						{
+							// gửi Dữ Liệu về các phòng và số lượng người chơi
+							Send_UpdateCountPlayer_OnLobby(socket);
+							printf("Cap nhat so luong nguoi choi o Sanh\n");
+						}
+						// người chơi đang ở trong phòng...
+						else
+						{
+							// cập nhật người chơi trong phòng chơi đó
+							// bằng cách thêm vào danh sách packet => phòng chơi sẽ xử lý
+							Handle_UpdateCountPlayer_OnRoom(is, socket);
+						}
+					}
 
-				//					// packetType là OutRoom => Room tăng CountPlayerExit thêm 1
-				//					// thoát, duyệt Client Socket tiếp theo
-				//					else if (packetType == Define::OutRoom)
-				//					{
-				//						room->Count_player_exit++;
-				//						continue;
-				//					}
+					// packetType là yêu cầu muốn vào phòng chơi...
+					if (packetType == Define::ChooseRoom)
+					{
+						// nhận thông tin phòng được chọn, thêm người chơi vào phòng
+						Receive_ChooseRoom(is, socket);
+					}
 
-				//					// tạo Packet có: 
-				//					// InputStream is, 
-				//					// ID Room của Người Chơi này 
-				//					// packetType
-				//					Packet p(is, socket->ID_Room, packetType);
+					// packetType là yêu cầu tạo phòng...
+					if (packetType == Define::CreateRoom)
+					{
+						// tạo phòng và thêm người chơi vào phòng đó
+						CreateRoomAndAdd(socket);
+					}
 
-				//					// đưa vào danh sách Packet
-				//					queue_packet.push_back(p);
-				//				}
-				//				// nếu Room chưa Bắt Đầu...
-				//				else
-				//				{
-				//					// packetType là UpdateCountPlayer => Room chạy hàm Cập Nhật Số Lượng Người Chơi
-				//					if (packetType == Define::UpdateCountPlayer)
-				//					{
-				//						room->UpdatePlayerCount();
-				//					}
-				//					// packetType là RequestName => đọc Tên và đặt Tên đó cho ClientSocket.name 
-				//					else if (packetType == Define::RequestName)
-				//					{
-				//						string name = "";
-				//						is.Read(name);
-				//						socket->name = name;
-				//					}
-				//				}
-				//				//break;
-				//			}
+					// packetType là yêu cầu rời khỏi phòng
+					if (packetType == Define::OutRoom)
+					{
+						// nếu phòng của người chơi đã bắt đầu, thì tăng số lượng người chơi đã thoát của phòng đó
+						Handle_PlayerOutRoon(socket);
+					}
 
-				//		}
-
-
-				//	}
-
+					if (packetType == Define::RequestName)
+					{
+						// nếu phòng của người chơi chưa bắt đầu, đọc tên của người chơi đó
+						Handle_RequestName(is, socket);
+					}
 				}
-
 			}
 		}
 		readableSockets.clear();
@@ -328,13 +256,115 @@ void NetWorkManager::CreateSocketServer()
 	readBlockSockets.push_back(socket_sever);
 }
 
-void NetWorkManager::Send_SyncTimePacket(const TCPSocketPtr & socket, int _NReceived)
+void NetWorkManager::Send_SyncTime(const TCPSocketPtr & socket, int _NReceived)
 {
 	OutputMemoryBitStream os;
 	os.Write(Define::SyncTime, Define::bitofTypePacket);
 	os.Write(_NReceived, 32);
 	os.Write((int)GetTickCount(), 32);
-	socket->Send(os.GetBufferPtr(), os.GetByteLength());
+	socket->Send(os);
+	//socket->Send(os.GetBufferPtr(), os.GetByteLength());
 	printf("Gui time Server cho 1 Client: %i\n", (int)GetTickCount());
+}
+
+void NetWorkManager::Send_UpdateCountPlayer_OnLobby(const TCPSocketPtr& _socket)
+{
+	OutputMemoryBitStream os;
+	os.Write(Define::UpdateCountPlayer, Define::bitofTypePacket);
+
+	// gửi số lượng phòng chơi hiện có
+	os.Write((int)mListWorld_room.size(), 4);
+
+	// gửi số lượng người chơi, tên của mỗi phòng chơi, phòng chơi đã bắt đầu hay chưa
+	for (auto room : mListWorld_room)
+	{
+		os.Write((int)room->listClient.size(), 4);
+		os.Write(room->name);
+		os.Write(room->isStart);
+	}
+	_socket->Send(os);
+}
+
+void NetWorkManager::Receive_ChooseRoom(InputMemoryBitStream & _is, const TCPSocketPtr & _socket)
+{
+	// người chơi đang ở sảnh chọn phòng
+	if (_socket->RoomID == -1)
+	{
+		// đọc ID phòng được chọn
+		int roomSelected = 0;
+		_is.Read(roomSelected, 4);
+
+		// gán người chơi có ID phòng là ID phòng đó 
+		_socket->RoomID = roomSelected;
+
+		// phòng chơi được chọn thêm người chơi này vào
+		mListWorld_room[roomSelected]->AddMember(_socket);
+	}
+}
+
+void NetWorkManager::Handle_UpdateCountPlayer_OnRoom(InputMemoryBitStream & _is, const TCPSocketPtr & _socket)
+{
+	// tìm phòng mà người chơi đang ở trong đó
+	for (auto room : mListWorld_room)
+	{
+		if (room->ID == _socket->RoomID)
+		{
+			// phòng chưa bắt đầu chơi...
+			if (!room->isStart)
+			{
+				// phòng cập nhật số lượng người chơi
+				room->UpdatePlayerCount();
+			}
+			// phòng đang chơi...
+			else
+			{
+				// tạo nhân vật và gửi thông tin đến người chơi này
+				room->CreatePlayerAndSend();
+
+				// tạo Packet có: Input Stream, ID phòng của người chơi này, packetType là cập nhật số lượng người chơi
+				// và đưa vào danh sách packet
+				Packet p(_is, _socket->RoomID, Define::UpdateCountPlayer);
+				queue_packet.push_back(p);
+			}
+
+			break;
+		}
+	}
+}
+
+void NetWorkManager::Handle_PlayerOutRoon(const TCPSocketPtr & _socket)
+{
+	// tìm phòng mà người chơi đang ở trong đó
+	for (auto room : mListWorld_room)
+	{
+		if (room->ID == _socket->RoomID)
+		{
+			if (room->isStart)
+			{
+				room->Count_player_exit++;
+			}
+
+			break;
+		}
+	}
+}
+
+void NetWorkManager::Handle_RequestName(InputMemoryBitStream& _is, const TCPSocketPtr & _socket)
+{						
+	// tìm phòng mà người chơi đang ở trong đó
+	for (auto room : mListWorld_room)
+	{
+		if (room->ID == _socket->RoomID)
+		{
+			if (!room->isStart)
+			{
+				string name = "";
+				_is.Read(name);
+				_socket->name = name;
+			}
+
+			break;
+		}
+	}
 }
 

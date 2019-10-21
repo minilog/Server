@@ -57,7 +57,7 @@ int main()
 			_lastTime += tickPerFrame;
 			net_work->Update(1.0f / 60);//_detalTime
 			temp++;
-			if (temp == /*60*/1)
+			if (temp == /*60*/60)
 			{
 				temp1++;
 				temp = 0;

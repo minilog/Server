@@ -4,6 +4,9 @@
 class NetWorkManager
 {
 public:
+	NetWorkManager();
+	~NetWorkManager() {}
+
 	vector<TCPSocketPtr> readBlockSockets;
 
 	TCPSocketPtr socket_sever;
@@ -14,8 +17,7 @@ public:
 	vector<World*> mListWorld_room;
 	void DeleteWorld(int id);
 	void CreateRoomAndAdd(TCPSocketPtr soc);
-	NetWorkManager();
-	~NetWorkManager();
+
 	void Update(float dt);
 	void ProcessNewClient();
 	void ReceivePacket();
@@ -25,6 +27,16 @@ private:
 
 	//void SendTimeServerToClientSocket(TCPSocketPtr _socket);
 
-	void Send_SyncTimePacket(const TCPSocketPtr& _socket, int _NReceived);
+	void Send_SyncTime(const TCPSocketPtr& _socket, int _NReceived);
+
+	void Send_UpdateCountPlayer_OnLobby(const TCPSocketPtr& _socket);;
+
+	void Receive_ChooseRoom(InputMemoryBitStream& _is, const TCPSocketPtr& _socket);
+
+	void Handle_UpdateCountPlayer_OnRoom(InputMemoryBitStream& _is, const TCPSocketPtr& _socket);
+
+	void Handle_PlayerOutRoon(const TCPSocketPtr& _socket);
+
+	void Handle_RequestName(InputMemoryBitStream& _is, const TCPSocketPtr& _socket);
 };
 
