@@ -1,14 +1,19 @@
-#pragma once
+﻿#pragma once
 #include "SocketAddress.h"
 #include <wincon.h>
 
 
 class TCPSocket {
+public:
+	int NetworkID = -1; // ID của người chơi: 0 - 3
+	int NetworkRoomID = -1;  // ID của phòng chơi 0 -3
+	std::string Name = "";
+
+	SOCKET mSocket;
 
 public:
 	~TCPSocket();
-	SOCKET mSocket;
-	std::string name = "";
+
 	int ChangetoDontWait(int flag);
 	int Connect(const SocketAddress& inAddress);
 	int Bind(const SocketAddress& inToAddress);
@@ -23,8 +28,6 @@ public:
 	int ReceiveBit(void* inBuffer, int inLen);
 	void Close();
 
-	int ID = -1;
-	int RoomID = -1;
 
 private:
 	friend class SocketUtil;

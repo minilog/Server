@@ -25,6 +25,7 @@ void Receive_thread(NetWorkManager* net)
 	}
 
 }
+
 int main()
 {
 	srand(time(NULL));
@@ -53,27 +54,22 @@ int main()
 
 		if (_detalTime >= tickPerFrame)
 		{
-			net_work->Handle_Packet();
+			net_work->HandlePacket();
 			_lastTime += tickPerFrame;
 			net_work->Update(1.0f / 60);//_detalTime
 			temp++;
-			if (temp == /*60*/60)
+			if (temp == 60)
 			{
 				temp1++;
 				temp = 0;
 				//printf("%i\t%f\n", temp1, _detalTime);
-				printf("Server time: %i\n", (int)GetTickCount());
+				printf("%i. Server time: %i\n", temp1,(int)GetTickCount());
 			}
-
 		}
 		else
 		{
 			Sleep((tickPerFrame - _detalTime) * 1000.0f);
 		}
-		//}
-
-
-
 	}
 
 

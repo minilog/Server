@@ -41,24 +41,6 @@ void PlayerServer::ActiveShield()
 	time_start_protect = 0;
 }
 
-void PlayerServer::OnChangeAction(Action action)
-{
-	mAction = action;
-	switch (mAction)
-	{
-	case Idle:  IDLE();  break;
-	case GoLeft: MoveLeft(); break;
-	case GoRight:MoveRight(); break;
-	case GoUp:MoveUp(); break;
-	case Action::GoDown:MoveDown(); break;
-	case Action::Fight:
-
-		break;
-	default: break;
-	}
-
-}
-
 RECT PlayerServer::GetBound()
 {
 	RECT rect;
@@ -113,12 +95,11 @@ void PlayerServer::CollisionWith(Entity* en)
 void PlayerServer::Write(OutputMemoryBitStream& os)
 {
 	Entity::Write(os);
-	int a = (int)mAction;
-	os.Write(a, Define::bitofID);
+	os.Write((int)mAction, Define::bitofID);
 	os.Write(mLevel, Define::bitofTypePacket);
 	os.Write(is_protect);
 	os.Write(mHeal, Define::bitofTypePacket);
-	os.Write(last_move_time);
+	os.Write(LastMoveTime);
 
 
 	os.Write(mScore_send, Define::bitofID);
@@ -135,15 +116,11 @@ void PlayerServer::Read(InputMemoryBitStream& is)
 	Entity::Read(is);
 	int action = 0;
 	is.Read(action, Define::bitofID);
-	mAction = (Action)action;
-	OnChangeAction(mAction);
+
 }
 
 void PlayerServer::onHandleKeyboard(int action)
 {
-	mAction = (Action)action;
-	OnChangeAction(mAction);
-
 }
 
 void PlayerServer::Update(float dt)

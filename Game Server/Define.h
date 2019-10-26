@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace Define
 {
@@ -9,7 +9,7 @@ namespace Define
 	const int WorldStatePacket = 5;
 	const int InputPacket = 6;
 	const int RequestName = 7;
-	const int ChooseRoom = 8;
+	const int JoinRoon = 8;
 	const int ExitGame = 9;
 	const int CreateRoom = 10;
 	const int GameOver = 11;
@@ -19,4 +19,5 @@ namespace Define
 	const int bitofTypePacket = 4;
 	const int bitofID = 11;
 	const int bitofLocation = 12;
+	const int NBit_RoomID = 2; // dao động từ 0 - 3
 }

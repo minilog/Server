@@ -136,12 +136,6 @@
     <ClInclude Include="NetWorkManager.h">
       <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
-    <ClInclude Include="WorldState.h">
-      <Filter>Old\Network TCP/IP</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Old\Network TCP/IP</Filter>
-    </ClInclude>
     <ClInclude Include="Brick.h">
       <Filter>Old\Game Objects</Filter>
     </ClInclude>
@@ -183,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="Define.h">
       <Filter>Yato</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>Old\Network TCP/IP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -264,12 +261,6 @@
     <ClCompile Include="GameTime.cpp">
       <Filter>Old\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="WorldState.cpp">
-      <Filter>Old\Network TCP/IP</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Old\Network TCP/IP</Filter>
-    </ClCompile>
     <ClCompile Include="Brick.cpp">
       <Filter>Old\Game Objects</Filter>
     </ClCompile>
@@ -317,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="TCPServer.cpp">
       <Filter>Old</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>Old\Network TCP/IP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

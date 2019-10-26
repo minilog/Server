@@ -24,7 +24,7 @@ public:
 	int mScore = 0;
 	int mLevel = 1;
 	int mHeal = 2;
-	std::string mName = "";
+	std::string Name = "";
 	bool is_protect = false;
 	float time_start_protect = 0;
 
@@ -35,10 +35,9 @@ public:
 	D3DXVECTOR2 position_add = D3DXVECTOR2(0, 0);
 
 	int id_of_bullet = 10;
-	float last_move_time = 0;
+	float LastMoveTime = 0;
 
 	void ActiveShield();
-	void OnChangeAction(Action action);
 	RECT GetBound() override;
 	void Up_ID_OfBullet();
 	void CollisionWith(Entity* en) override;

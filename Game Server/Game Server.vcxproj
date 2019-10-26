@@ -176,8 +176,7 @@
     <ClInclude Include="TCPSocket.h" />
     <ClInclude Include="UpgradeItem.h" />
     <ClInclude Include="Water.h" />
-    <ClInclude Include="World.h" />
-    <ClInclude Include="WorldState.h" />
+    <ClInclude Include="Room.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Boss.cpp" />
@@ -222,8 +221,7 @@
     <ClCompile Include="TCPServer.cpp" />
     <ClCompile Include="UpgradeItem.cpp" />
     <ClCompile Include="Water.cpp" />
-    <ClCompile Include="World.cpp" />
-    <ClCompile Include="WorldState.cpp" />
+    <ClCompile Include="Room.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MapReader\Tmx.h.in" />
