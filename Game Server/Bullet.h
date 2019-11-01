@@ -1,26 +1,62 @@
-#pragma once
+﻿#pragma once
+
 #include "Entity.h"
 
-class Bullet :public Entity
+class Bullet : public Entity
 {
+	const float speed = 500.f;
+	Direction direction; // hướng bay
 public:
-	Bullet();
-	Bullet(int id, int id_pl);
-	Bullet(int id);
-	~Bullet();
-	bool isActive = false;
-	bool isChange = false;
-	RECT GetBound();
-	int ID_of_player = 0;
+	int PlayerID = -1; // là của người chơi nào
 
-	/*void Emplace(Bullet *newBullet);
-	bool Compare(Bullet* newBullet);*/
-	void CollisionWith(Entity* en) override;
-	void Update(float dt) override;
-	void SetActive(bool flag);
-	void setMoveDirection(Direction direction);
-	void Read(InputMemoryBitStream& is) override;
-	void Write(OutputMemoryBitStream& os) override;
+public:
+	Bullet(int _ID, int _playerID)
+	{
+		ID = _ID;
+		PlayerID = _playerID;
+
+		Type = ET_Bullet;
+		IsDelete = true;
+		width = 6;
+		height = 6;
+;	}
+	~Bullet() {}
+
+	void Update(float _dt) override
+	{
+		if (IsDelete)
+			return;
+
+		position += velocity * _dt;
+	}
+
+	void MakeCollision(Entity* _en) override
+	{
+		IsDelete = true;
+	}
+
+	// thay đổi vận tốc đựa theo hướng bay
+	void SetDirection(Direction _dir)
+	{
+		direction = _dir;
+		switch (direction)
+		{
+		case D_Left:
+			velocity = D3DXVECTOR2(-speed, 0.f);
+			break;
+		case D_Right:
+			velocity = D3DXVECTOR2(speed, 0.f);
+			break;
+		case D_Up:
+			velocity = D3DXVECTOR2(0.f, -speed);
+			break;
+		case D_Down:
+			velocity = D3DXVECTOR2(0.f, speed);
+			break;
+		default:
+			break;
+		}
+	}
 };
 
 

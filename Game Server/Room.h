@@ -10,25 +10,32 @@
 using namespace std;
 class Room
 {
-	int networkID = -1; // ID phòng dao động từ 0 - 3
-
+	int ID = -1;
+	bool isPlaying = false;
+	int startingTime = -1;
 	std::vector<TCPSocketPtr> clientList; // danh sách người chơi
 public:
-	Room(int _networkID) { networkID = _networkID; }
+	bool Player0 = false;
+	bool Player1 = false;
+	bool Player2 = false;
+	bool Player3 = false;
+	bool Player0_Ready = false;
+	bool Player1_Ready = false;
+	bool Player2_Ready = false;
+	bool Player3_Ready = false;
+
+public:
+	Room(int _networkID) { ID = _networkID; }
 	~Room() {}
 
-	void HandleDataFromClients(Packet _packet) {}
-	void HandlePlayerExit(int _playerNetworkID) {}
-	void AddPlayer(TCPSocketPtr _playerSocket)
-	{
-		// gán người chơi có ID phòng là ID phòng đó 
-		_playerSocket->NetworkRoomID = networkID;
+	void Write(OutputMemoryBitStream& _os);
 
-		_playerSocket->NetworkID = clientList.size();
-		clientList.push_back(_playerSocket);
-	}
+	void HandlePlayerInput(Packet _packet) {}
+	void HandlePlayerOutRoom(TCPSocketPtr _playerSocket);
+	void HandlePlayerJoinRoom(TCPSocketPtr _playerSocket);
+	void HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket);
 
-	int GetNetworkID() { return networkID; }
+	int GetID() { return ID; }
 	int GetNPlayer() { return (int)clientList.size(); }
 };
 

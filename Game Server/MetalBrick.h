@@ -1,12 +1,14 @@
 #pragma once
+
 #include "Brick.h"
+
 class MetalBrick : public Brick
 {
 public:
-	MetalBrick(D3DXVECTOR3 position);
-	~MetalBrick();
-	RECT GetBound();
-	void BeCollideWith_Bullet() override;
-	RECT rect();
+	MetalBrick(D3DXVECTOR2 _pos)
+	{
+		BaseInit(_pos);
+		Type = ET_MetalBrick;
+	}
+	~MetalBrick() {}
 };
-

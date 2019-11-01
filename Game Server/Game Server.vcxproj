@@ -127,12 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Boss.h" />
+    <ClInclude Include="Eagle.h" />
     <ClInclude Include="Boundary.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BrickNormal.h" />
     <ClInclude Include="Bullet.h" />
-    <ClInclude Include="Define.h" />
+    <ClInclude Include="GameDefine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameCollision.h" />
     <ClInclude Include="GameLog.h" />
@@ -167,8 +167,8 @@
     <ClInclude Include="NetWorkManager.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="Packet.h" />
-    <ClInclude Include="PlayerServer.h" />
-    <ClInclude Include="ProtectPlayer.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="ProtectItem.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="SocketAddress.h" />
     <ClInclude Include="SocketUtil.h" />
@@ -179,17 +179,11 @@
     <ClInclude Include="Room.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Boss.cpp" />
-    <ClCompile Include="Boundary.cpp" />
-    <ClCompile Include="Brick.cpp" />
-    <ClCompile Include="BrickNormal.cpp" />
-    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameCollision.cpp" />
     <ClCompile Include="GameLog.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="GameTime.cpp" />
-    <ClCompile Include="Item.cpp" />
     <ClCompile Include="MapReader\base64.cpp" />
     <ClCompile Include="MapReader\miniz.c" />
     <ClCompile Include="MapReader\tinyxml2.cpp" />
@@ -211,23 +205,16 @@
     <ClCompile Include="MapReader\TmxTileset.cpp" />
     <ClCompile Include="MapReader\TmxUtil.cpp" />
     <ClCompile Include="MemoryBitStream.cpp" />
-    <ClCompile Include="MetalBrick.cpp" />
     <ClCompile Include="NetWorkManager.cpp" />
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Packet.cpp" />
-    <ClCompile Include="PlayerServer.cpp" />
-    <ClCompile Include="ProtectPlayer.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="TCPServer.cpp" />
-    <ClCompile Include="UpgradeItem.cpp" />
-    <ClCompile Include="Water.cpp" />
     <ClCompile Include="Room.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MapReader\Tmx.h.in" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

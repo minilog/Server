@@ -1,5 +1,7 @@
 #pragma once
-class InputMemoryBitStream;
+
+#include "MemoryBitStream.h"
+
 class Packet
 {
 public:

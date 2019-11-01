@@ -1,25 +1,42 @@
-#pragma once
+﻿#pragma once
+
 #include "Entity.h"
 
 class Item : public Entity
 {
+	const float existTime = 7.f;
+
 public:
-	~Item();
+	Item() {}
+	~Item() {}
 
-	virtual void Update(float dt);
+	void Update(float _dt) override
+	{
+		if (IsDelete)
+			return;
 
+		count_existTime += _dt;
+		if (count_existTime >= existTime)
+		{
+			IsDelete = true;
+			count_existTime = 0.f;
+		}
+	}
+	
+	void MakeCollision(Entity* _en) override
+	{
+		IsDelete = true;
+	}
 
-	void BeCollideWith_Player();
-
-	bool getDelete();
+// các biến và hàm hỗ trợ
+private:
+	float count_existTime = 0.f; // đếm
 protected:
-	Item();
-	bool Init(D3DXVECTOR3 position);
-
-	float exist_time = 0;
-	float cout_time = 0;
-	virtual RECT rect() = 0;
-	RECT reg;
-	bool isDelete;
+	void BaseInit(D3DXVECTOR2 _pos)
+	{
+		position = _pos;
+		width = 32;
+		height = 32;
+	}
 };
 

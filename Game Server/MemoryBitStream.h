@@ -1,26 +1,9 @@
 #pragma once
 
-
 #include <cstdint>
 #include <cstdlib>
-//#include "Entity.h"
 #include <string>
-#include <d3dx9.h>
-#include <vector>
-//#include "PlayerServer.h";
-//#include "Bullet.h"
-
-
-//inline uint32_t ConvertToFixed( float inNumber, float inMin, float inPrecision )
-//{
-//	return static_cast< int > ( ( inNumber - inMin ) / inPrecision );
-//}
-//
-//inline float ConvertFromFixed( uint32_t inNumber, float inMin, float inPrecision )
-//{
-//	return static_cast< float >( inNumber ) * inPrecision + inMin;
-//}
-
+#include "GameDefine.h"
 
 class OutputMemoryBitStream
 {
@@ -44,29 +27,9 @@ public:
 
 	void WriteBytes(const void* inData, uint32_t inByteCount) { WriteBits(inData, inByteCount << 3); }
 
-
 	void Write(uint32_t inData, uint32_t inBitCount = 32) { WriteBits(&inData, inBitCount); }
 	void Write(int inData, uint32_t inBitCount = 32) { WriteBits(&inData, inBitCount); }
 	void Write(float inData) { WriteBits(&inData, 32); }
-
-	//void Write(Player* pl)
-	//{
-	//	Write(pl->ID,Define::bitofID);
-	//	Write((int)pl->mAction,Define::bitofID);
-	//	Write(pl->isFight);
-	//	Write((int)pl->GetPosition().x,Define::bitofLocation);
-	//	Write((int)pl->GetPosition().y, Define::bitofLocation);
-	//}
-	//void Write(Entity* pl)
-	//{
-	//	Write(pl->ID, Define::bitofID);
-	//	Write(pl->Tag, Define::bitofID);
-	//	//Write(pl->Dir, Define::bitofID);
-	//	Write((int)pl->GetPosition().x, Define::bitofLocation);
-	//	Write((int)pl->GetPosition().y, Define::bitofLocation);
-	//}
-
-
 
 	template< typename T >
 	void Write(T inData, uint32_t inBitCount = sizeof(T) * 8)
@@ -99,8 +62,7 @@ private:
 };
 
 
-
-
+//// INPUT STREAM
 
 class InputMemoryBitStream
 {
@@ -108,7 +70,7 @@ public:
 
 	InputMemoryBitStream(char* inBuffer, uint32_t inByteCount) :
 		mBuffer(inBuffer),
-		mBitCapacity(inByteCount << 3),
+		mBitCapacity(inByteCount * 8),
 		mBitHead(0),
 		mIsBufferOwner(false) {}
 
@@ -153,30 +115,6 @@ public:
 	void		Read(uint8_t& outData, uint32_t inBitCount = 8) { ReadBits(&outData, inBitCount); }
 	void		Read(bool& outData) { ReadBits(&outData, 1); }
 
-	//void		Read(Player* pl)
-	//			{
-	//				Read(pl->ID,Define::bitofID);
-	//				int action = 0;
-	//				Read(action, Define::bitofID);
-	//				pl->mAction = (Action)action;
-	//				Read(pl->isFight);
-	//				int x = 0; int y = 0;
-	//				Read(x,Define::bitofLocation);
-	//				Read(y,Define::bitofLocation);
-	//				pl->SetPosition(x, y);
-	//			}
-	//void		Read(Entity* pl)
-	//{
-	//	Read(pl->ID, Define::bitofID);
-	//	Read(pl->Tag, Define::bitofID);
-	////	Read(pl->Dir, Define::bitofID);
-	//	int x = 0; int y = 0;
-	//	Read(x, Define::bitofLocation);
-	//	Read(y, Define::bitofLocation);
-	//	pl->SetPosition(x, y);
-	//}
-	//
-
 	void		ResetToCapacity(uint32_t inByteCapacity) { mBitCapacity = inByteCapacity << 3; mBitHead = 0; }
 
 
@@ -195,6 +133,5 @@ private:
 	uint32_t	mBitHead;
 	uint32_t	mBitCapacity;
 	bool		mIsBufferOwner;
-
 };
 

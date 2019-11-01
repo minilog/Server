@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <d3dx9.h>
 #include <d3d9.h>
 #include <vector>
@@ -15,27 +15,22 @@
 
 class GameMap
 {
+	std::vector<Brick*> brickList;
+	Tmx::Map                *map;
+
 public:
 	GameMap(char* filePath);
-	void Update(float dt);
-	Tmx::Map* GetMap();
-	RECT GetWorldMapBound();
-	QuadTree* GetQuadTree();
-	int GetWidth();
-	int GetHeight();
-	int GetTileWidth();
-	int GetTileHeight();
+	~GameMap() { delete map; }
 
-	std::vector<Brick*> GetListBrick();
-	void eraseBrick(int i);
-	~GameMap();
+	Tmx::Map* GetMap() { return map; }
+	std::vector<Brick*> GetListBrick() { return brickList; }
+
+// các hàm hỗ trợ
 private:
-	QuadTree * mQuadTree;
 	void LoadMap(char* filePath);
-	bool isContain(RECT rect1, RECT rect2);
-
-	Tmx::Map                *mMap;
-	std::vector<Brick*> mListBrick;
-
+	int GetWidth() { return map->GetWidth() * map->GetTileWidth(); }
+	int GetHeight() { return map->GetHeight() * map->GetTileHeight(); }
+	int GetTileWidth() { return map->GetTileWidth(); }
+	int GetTileHeight() { return map->GetTileHeight(); }
 };
 

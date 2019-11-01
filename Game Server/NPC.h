@@ -1,31 +1,21 @@
-#pragma once
+﻿#pragma once
+
 #include "Entity.h"
-#include "PlayerServer.h"
 
 class NPC :public Entity
 {
+	const float speed = 200.f;
+	Direction direction; // hướng di chuyển
+	bool isExplosion = false;
+
 public:
-	NPC();
-	~NPC();
-	void CollideWith_World();
-	Action mAction = Idle;
-	int mLevel = 1;
-	int mHeal = 2;
-	float last_random = 0;
+	NPC(int _ID);
+	~NPC() {}
 
-	int last_time_die = 0;
-	bool is_spawn = false;
+	void Update(float _dt) override;
+	void MakeCollision(Entity* _en) override { velocity = D3DXVECTOR2(0.f, 0.f); }
+	void Write(OutputMemoryBitStream& _os) override {}
 
-	void Respawn();
-	void RandomAction();
-	void CollisionWith(Entity* en) override;
-	void Update(float dt) override;
-	RECT GetBound() override;
-	void Write(OutputMemoryBitStream& os) override;
-	void MoveLeft();
-	void MoveRight();
-	void MoveUp();
-	void MoveDown();
-	void IDLE();
+	void SetDirection(Direction _dir);
 };
 

@@ -1,8 +1,5 @@
 #include "MemoryBitStream.h"
 
-
-
-
 void OutputMemoryBitStream::WriteBits(uint8_t inData,
 	uint32_t inBitCount)
 {
@@ -10,7 +7,6 @@ void OutputMemoryBitStream::WriteBits(uint8_t inData,
 
 	if (nextBitHead > mBitCapacity)
 	{
-
 		ReallocBuffer(mBitCapacity * 2 > nextBitHead ? mBitCapacity * 2 : nextBitHead);
 	}
 
@@ -54,13 +50,6 @@ void OutputMemoryBitStream::WriteBits(const void* inData, uint32_t inBitCount)
 	}
 }
 
-
-
-
-
-
-
-
 void OutputMemoryBitStream::ReallocBuffer(uint32_t inNewBitLength)
 {
 	if (mBuffer == nullptr)
@@ -85,7 +74,7 @@ void OutputMemoryBitStream::ReallocBuffer(uint32_t inNewBitLength)
 }
 
 
-
+//// INPUT STREAM
 
 void InputMemoryBitStream::ReadBits(uint8_t& outData, uint32_t inBitCount)
 {
@@ -123,4 +112,3 @@ void InputMemoryBitStream::ReadBits(void* outData, uint32_t inBitCount)
 		ReadBits(*destByte, inBitCount);
 	}
 }
-

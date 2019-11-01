@@ -1,12 +1,12 @@
 ﻿#pragma once
+
 #include "SocketAddress.h"
 #include <wincon.h>
 
-
 class TCPSocket {
 public:
-	int NetworkID = -1; // ID của người chơi: 0 - 3
-	int NetworkRoomID = -1;  // ID của phòng chơi 0 -3
+	int PlayerID = -1;
+	int PlayerRoomID = -1;
 	std::string Name = "";
 
 	SOCKET mSocket;

@@ -1,11 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "Entity.h"
+
 class GameCollision
 {
 public:
-	GameCollision();
-	~GameCollision();
-
-	static bool	isCollide(Entity *obj1, Entity *obj2, float dt);
+	// tính toán frame tiếp theo có va chạm hay không
+	static bool	IsCollideInNextFrame(Entity* _en1, Entity* _en2, float _dt);
 };
 
