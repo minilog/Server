@@ -21,7 +21,6 @@ void Receive_thread(NetWorkManager* net)
 	while (1)
 	{
 		net->ReceivePacket();
-
 	}
 
 }

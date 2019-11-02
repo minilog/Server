@@ -20,9 +20,6 @@ void Room::Write(OutputMemoryBitStream & _os)
 
 void Room::HandlePlayerOutRoom(TCPSocketPtr _playerSocket)
 {
-	if (isPlaying)
-		return;
-
 	int pID = _playerSocket->PlayerID;
 	if (pID == 0)
 	{
@@ -47,6 +44,15 @@ void Room::HandlePlayerOutRoom(TCPSocketPtr _playerSocket)
 
 	_playerSocket->PlayerID = -1;
 	_playerSocket->PlayerRoomID = -1;
+
+	// pop back that client
+	for (int i = 0; i < clientList.size(); i++)
+	{
+		if (clientList[i] == _playerSocket)
+		{
+			clientList.erase(clientList.begin() + i);
+		}
+	}
 }
 
 void Room::HandlePlayerJoinRoom(TCPSocketPtr _playerSocket)
