@@ -55,15 +55,7 @@ int main()
 		{
 			net_work->HandlePlayerInputs();
 			_lastTime += tickPerFrame;
-			net_work->Update(1.0f / 60);//_detalTime
-			//temp++;
-			//if (temp == 60)
-			//{
-			//	temp1++;
-			//	temp = 0;
-			//	//printf("%i\t%f\n", temp1, _detalTime);
-			//	printf("%i. Server time: %i\n", temp1,(int)GetTickCount());
-			//}
+			net_work->Update(1.0f / 60);
 		}
 		else
 		{

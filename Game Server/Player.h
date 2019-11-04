@@ -13,10 +13,9 @@ class Player : public Entity
 public:
 	Player(int _ID);
 	~Player(){}
-
 	void Update(float _dt) override;
 	void MakeCollision(Entity* _en) override { velocity = D3DXVECTOR2(0.f, 0.f); }
-	void Write(OutputMemoryBitStream& _os) override {}
-	void Read(InputMemoryBitStream& _is) override {}
+	void Write(OutputMemoryBitStream& _os) override;
+	void Read(InputMemoryBitStream& _is) override;
 };
 

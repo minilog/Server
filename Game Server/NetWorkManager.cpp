@@ -39,14 +39,18 @@ void NetWorkManager::HandlePlayerInputs()
 	while (!packetQueues.empty())
 	{
 		Packet p = packetQueues.at(packetQueues.size() - 1);
-		roomList[p.RoomID]->HandlePlayerInput(p);
+		//roomList[p.RoomID]->HandlePlayerInput(p);
 
 		packetQueues.pop_back();
 	}
 }
 
-void NetWorkManager::Update(float dt)
+void NetWorkManager::Update(float _dt)
 {
+	for (auto room : roomList)
+	{
+		room->Update(_dt);
+	}
 }
 
 void NetWorkManager::ReceivePacket()
@@ -116,7 +120,7 @@ void NetWorkManager::ReceivePacket()
 								os.Write(PT_UpdateRooms, NBit_PacketType);
 								for (auto room : roomList)
 								{
-									room->Write(os);
+									room->WriteUpdateRooms(os);
 								}
 								// client in lobby
 								if (socket->PlayerID == -1)
@@ -211,6 +215,11 @@ void NetWorkManager::ReceivePacket()
 								printf("Player ID = %i, RoomID = %i exit game\n", _playerID, _playerRoomID);
 								break;
 							}
+						}
+
+						if (packetType == PT_PlayerInput)
+						{
+							roomList[socket->PlayerRoomID]->HandlePlayerInput(socket, is);
 						}
 
 						// clear the byte is reading

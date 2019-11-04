@@ -26,7 +26,8 @@ enum PacketType
 	PT_ExitRoom,
 	PT_StartGame,
 	PT_GameState,
-	PT_ReadyCancel
+	PT_ReadyCancel,
+	PT_PlayerInput
 };
 
 // [0, 10] => 4 bit

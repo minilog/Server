@@ -6,6 +6,7 @@
 #include "GameMap.h"
 #include "Packet.h"
 #include <map>
+#include "Player.h"
 
 using namespace std;
 class Room
@@ -13,7 +14,13 @@ class Room
 	int ID = -1;
 	bool isPlaying = false;
 	int startingTime = -1;
-	std::vector<TCPSocketPtr> clientList; // danh sách người chơi
+	std::vector<TCPSocketPtr> clientList;
+	const float time_StartGame = 3000;
+
+	// IN BATTLE
+	GameMap* map;
+	vector<Player*> playerList;
+
 public:
 	bool Player0 = false;
 	bool Player1 = false;
@@ -25,17 +32,18 @@ public:
 	bool Player3_Ready = false;
 
 public:
-	Room(int _networkID) { ID = _networkID; }
+	Room(int _networkID);
 	~Room() {}
-
-	void Write(OutputMemoryBitStream& _os);
-
-	void HandlePlayerInput(Packet _packet) {}
+	void Update(float _dt);
+	void WriteUpdateRooms(OutputMemoryBitStream& _os);
+	void HandlePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);
 	void HandlePlayerOutRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerJoinRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket);
-
 	int GetID() { return ID; }
 	int GetNPlayer() { return (int)clientList.size(); }
+
+private:
+	int count = 0;
 };
 

@@ -23,7 +23,7 @@ public:
 	~GameMap() { delete map; }
 
 	Tmx::Map* GetMap() { return map; }
-	std::vector<Brick*> GetListBrick() { return brickList; }
+	std::vector<Brick*> GetBrickList() { return brickList; }
 
 // các hàm hỗ trợ
 private:

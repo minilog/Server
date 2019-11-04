@@ -1,6 +1,66 @@
 ﻿#include "Room.h"
 
-void Room::Write(OutputMemoryBitStream & _os)
+Room::Room(int _networkID)
+{
+	ID = _networkID;
+
+	map = new GameMap("Resource files/map.tmx");
+
+	// init 4 players
+	for (int i = 0; i < 4; i++)
+	{
+		Player* player = new Player(i);
+		playerList.push_back(player);
+	}
+}
+
+void Room::Update(float _dt)
+{
+	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
+		return;
+
+	for (auto brick : map->GetBrickList())
+	{
+		if (!brick->IsDelete)
+		{
+			for (auto player : playerList)
+			{
+				if (GameCollision::IsCollideInNextFrame(player, brick, _dt))
+				{
+					player->MakeCollision(brick);
+				}
+			}
+		}
+	}
+
+	for (auto player : playerList)
+	{
+		player->Update(_dt);
+	}
+
+	count++;
+	if (count >= 3)
+	{
+		for (auto client : clientList)
+		{
+			OutputMemoryBitStream os;
+			
+			os.Write(PT_PlayerInput, NBit_PacketType);
+			for (auto player : playerList)
+			{
+				player->Write(os);
+			}
+
+			client->Send(os);
+
+			printf("SEND world\n");
+		}
+
+		count = 0;
+	}
+}
+
+void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 {
 	_os.Write(Player0);
 	_os.Write(Player0_Ready);
@@ -16,6 +76,11 @@ void Room::Write(OutputMemoryBitStream & _os)
 
 	_os.Write(isPlaying);
 	_os.Write(startingTime, NBit_Time);
+}
+
+void Room::HandlePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is)
+{
+	playerList[_playerSocket->PlayerID]->Read(_is);
 }
 
 void Room::HandlePlayerOutRoom(TCPSocketPtr _playerSocket)
@@ -116,7 +181,7 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 	int nPlayers = Player0 + Player1 + Player2 + Player3;
 	int nReady = Player0_Ready + Player1_Ready + Player2_Ready + Player3_Ready;
 
-	if (nPlayers >= 2 && nPlayers == nReady)
+	if (nPlayers >= 1 && nPlayers == nReady)
 	{
 		isPlaying = true;
 		startingTime = (int)GetTickCount();
