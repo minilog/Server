@@ -25,7 +25,7 @@ public:
 	Tmx::Map* GetMap() { return map; }
 	std::vector<Brick*> GetBrickList() { return brickList; }
 
-// các hàm hỗ trợ
+// support
 private:
 	void LoadMap(char* filePath);
 	int GetWidth() { return map->GetWidth() * map->GetTileWidth(); }

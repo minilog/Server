@@ -106,8 +106,8 @@ void NetWorkManager::ReceivePacket()
 
 								socket->Send(os);
 
-								printf("Reply sync time PlayerID = %i, RoomID = %i, Time = %i\n", 
-									socket->PlayerID, socket->PlayerRoomID, (int)GetTickCount());
+			/*					printf("Reply sync time PlayerID = %i, RoomID = %i, Time = %i\n", 
+									socket->PlayerID, socket->PlayerRoomID, (int)GetTickCount());*/
 							}
 						}
 

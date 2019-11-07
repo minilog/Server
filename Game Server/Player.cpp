@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 
 Player::Player(int _ID)
 {
@@ -24,11 +24,20 @@ Player::Player(int _ID)
 	default:
 		break;
 	}
+
+	//for (int i = 0; i < 30; i++)
+	//{
+	//	positionList.push_back(position);
+	//}
 }
 
 void Player::Update(float _dt)
 {
 	position += velocity * _dt;
+
+	// delete in the begin, add in the end
+	//positionList.erase(positionList.begin());
+	//positionList.push_back(position);
 }
 
 void Player::Write(OutputMemoryBitStream & _os)
@@ -39,19 +48,16 @@ void Player::Write(OutputMemoryBitStream & _os)
 	_os.Write(x, NBit_Position);
 	_os.Write(y, NBit_Position);
 	_os.Write(direction, NBit_Direction);
+}	
+
+void Player::SetPositionInPreviousFrame(int _preFrame)
+{
+	position = positionList[30 - 1 - _preFrame];
 }
 
-void Player::Read(InputMemoryBitStream & _is)
+void Player::SetDirection(Direction _dir)
 {
-	if (IsDelete)
-		return;
-
-	Direction _d = D_Stand;
-
-	_is.Read(_d, NBit_Direction);
-
-	direction = _d;
-
+	direction = _dir;
 	// set velocity
 	switch (direction)
 	{

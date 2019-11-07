@@ -22,14 +22,8 @@ class Room
 	vector<Player*> playerList;
 
 public:
-	bool Player0 = false;
-	bool Player1 = false;
-	bool Player2 = false;
-	bool Player3 = false;
-	bool Player0_Ready = false;
-	bool Player1_Ready = false;
-	bool Player2_Ready = false;
-	bool Player3_Ready = false;
+	vector<bool> playerInRoomList;
+	vector<bool> playerReadyList;
 
 public:
 	Room(int _networkID);
