@@ -25,10 +25,10 @@ Player::Player(int _ID)
 		break;
 	}
 
-	//for (int i = 0; i < 30; i++)
-	//{
-	//	positionList.push_back(position);
-	//}
+	for (int i = 0; i < 30; i++)
+	{
+		positionList.push_back(position);
+	}
 }
 
 void Player::Update(float _dt)
@@ -36,8 +36,8 @@ void Player::Update(float _dt)
 	position += velocity * _dt;
 
 	// delete in the begin, add in the end
-	//positionList.erase(positionList.begin());
-	//positionList.push_back(position);
+	positionList.erase(positionList.begin());
+	positionList.push_back(position);
 }
 
 void Player::Write(OutputMemoryBitStream & _os)
@@ -57,8 +57,8 @@ void Player::SetPositionInPreviousFrame(int _preFrame)
 
 void Player::SetDirection(Direction _dir)
 {
+	// set vận tốc
 	direction = _dir;
-	// set velocity
 	switch (direction)
 	{
 	case D_Stand:

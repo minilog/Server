@@ -36,13 +36,7 @@ NetWorkManager::NetWorkManager()
 
 void NetWorkManager::HandlePlayerInputs()
 {
-	while (!packetQueues.empty())
-	{
-		Packet p = packetQueues.at(packetQueues.size() - 1);
-		//roomList[p.RoomID]->HandlePlayerInput(p);
 
-		packetQueues.pop_back();
-	}
 }
 
 void NetWorkManager::Update(float _dt)

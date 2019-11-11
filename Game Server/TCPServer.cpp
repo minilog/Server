@@ -53,7 +53,6 @@ int main()
 
 		if (_detalTime >= tickPerFrame)
 		{
-			net_work->HandlePlayerInputs();
 			_lastTime += tickPerFrame;
 			net_work->Update(1.0f / 60);
 		}

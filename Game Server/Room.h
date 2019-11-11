@@ -8,6 +8,13 @@
 #include <map>
 #include "Player.h"
 
+struct PlayerInput
+{
+	int playerID = 0;
+	Direction direction = D_Stand;
+	int time = 0;
+};
+
 using namespace std;
 class Room
 {
@@ -20,6 +27,7 @@ class Room
 	// IN BATTLE
 	GameMap* map;
 	vector<Player*> playerList;
+	vector<PlayerInput*> pInputList;
 
 public:
 	vector<bool> playerInRoomList;
@@ -34,10 +42,10 @@ public:
 	void HandlePlayerOutRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerJoinRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket);
+	void HandleInputs();
 	int GetID() { return ID; }
 	int GetNPlayer() { return (int)clientList.size(); }
 
 private:
 	int count = 0;
 };
-

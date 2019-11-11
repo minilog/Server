@@ -11,13 +11,14 @@ Room::Room(int _networkID)
 		playerInRoomList.push_back(false);
 		playerReadyList.push_back(false);
 	}
-
 }
 
 void Room::Update(float _dt)
 {
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
+
+	HandleInputs();
 
 	for (auto brick : map->GetBrickList())
 	{
@@ -49,6 +50,7 @@ void Room::Update(float _dt)
 			
 			os.Write(PT_PlayerInput, NBit_PacketType);
 			os.Write((int)GetTickCount(), NBit_Time); // write server time
+
 			for (auto player : playerList)
 			{
 				player->Write(os);
@@ -76,59 +78,91 @@ void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 	}
 }
 
+
+void Room::HandleInputs()
+{
+	while (!pInputList.empty())
+	{
+		PlayerInput* input = pInputList.at(pInputList.size() - 1);
+
+		{
+			int nFramePrevious = (int)(((int)GetTickCount() - input->time) / (1000.f / 60.f)); // số frame đã trôi qua
+
+			Player* player = nullptr; // xác định player gửi input
+			for (auto p : playerList)
+			{
+				if (p->ID == input->playerID)
+				{
+					player = p;
+					break;
+				}
+			}
+
+			if (nFramePrevious <= 0)
+			{
+				player->SetDirection(input->direction);
+				printf("Receive input from Player %i, Room %i, Dir = %i\n", input->playerID, ID, input->direction);
+				return;
+			}
+
+			// không nhận các packet trễ
+			if (nFramePrevious >= 30 || player->LastReceiveTime >= input->time)
+				return;
+
+			{
+				printf("Receive input from Player %i, Room %i, Dir = %i\n", input->playerID, ID, input->direction);
+
+				player->LastReceiveTime = input->time;
+
+				player->SetPositionInPreviousFrame(nFramePrevious);
+				player->SetDirection(input->direction);
+
+				printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
+			}
+
+			// chạy frame liên tục cho đến hiện tại
+			{
+				for (int i = 0; i < nFramePrevious; i++)
+				{
+					// va chạm các viên gạch với player này
+					for (auto brick : map->GetBrickList())
+					{
+						if (!brick->IsDelete)
+						{
+							if (GameCollision::IsCollideInNextFrame(player, brick, 1 / 60.f))
+							{
+								player->MakeCollision(brick);
+							}
+						}
+					}
+
+					// update
+					player->Update(1 / 60.f);
+
+					printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
+				}
+			}
+		}
+
+		pInputList.pop_back();
+		delete input;
+	}
+}
+
 void Room::HandlePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is)
 {
-	Direction dir = D_Stand;
+	int receiveTime = 0;
+	_is.Read(receiveTime, NBit_Time);
 
+	Direction dir = D_Stand;
 	_is.Read(dir, NBit_Direction);
 
-	for (auto player : playerList)
-	{
-		if (player->ID == _playerSocket->PlayerID)
-		{
-			player->SetDirection(dir);
-		}
-	}
+	PlayerInput* pInput = new PlayerInput();
+	pInput->playerID = _playerSocket->PlayerID;
+	pInput->direction = dir;
+	pInput->time = receiveTime;
 
-	{
-		//int sentTime = 0;
-		//Direction dir = D_Stand;
-
-		//_is.Read(sentTime, NBit_Time);
-		//_is.Read(dir, NBit_Direction);
-
-		//int myTime = (int)GetTickCount();
-		//int nFramePrevious = (int)((myTime - sentTime) / (1000.f / 60.f)); // đã bao nhiêu frame trôi qua từ lúc client gửi
-
-		//Player* p = playerList[_playerSocket->PlayerID];
-		//
-		//if (nFramePrevious >= 30 || nFramePrevious < 0 || p->LastReceiveTime >= sentTime)
-		//	return;
-
-
-		printf("Receive input from Player %i, Room %i, Dir = %i\n", _playerSocket->PlayerID, _playerSocket->PlayerRoomID, dir);
-		//p->LastReceiveTime = sentTime;
-		//p->SetPositionInPreviousFrame(nFramePrevious);
-		//p->SetDirection(dir);
-
-		//for (int i = 0; i < nFramePrevious; i++)
-		//{
-		//	// check collision
-		//	for (auto brick : map->GetBrickList())
-		//	{
-		//		if (!brick->IsDelete)
-		//		{
-		//			if (GameCollision::IsCollideInNextFrame(p, brick, 1 / 60.f))
-		//			{
-		//				p->MakeCollision(brick);
-		//			}
-		//		}
-		//	}
-
-		//	// update
-		//	p->Update(1 / 60.f);
-		//}
-	}
+	pInputList.push_back(pInput);
 }
 
 void Room::HandlePlayerOutRoom(TCPSocketPtr _playerSocket)
@@ -208,3 +242,4 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 		printf("Game in room = %i start\n", ID);
 	}
 }
+
