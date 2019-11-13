@@ -40,6 +40,13 @@ void Player::Update(float _dt)
 	positionList.push_back(position);
 }
 
+void Player::Update_Rollback(float _dt)
+{
+	position += velocity * _dt;
+
+	positionList.push_back(position);
+}
+
 void Player::Write(OutputMemoryBitStream & _os)
 {
 	int x = int(position.x * 10);
@@ -52,7 +59,12 @@ void Player::Write(OutputMemoryBitStream & _os)
 
 void Player::SetPositionInPreviousFrame(int _preFrame)
 {
-	position = positionList[30 - 1 - _preFrame];
+	// xóa các frame từ lúc nhận input cho đến hiện tại
+	position = positionList[30 - _preFrame - 1];
+	for (int i = 0; i < _preFrame; i++)
+	{
+		positionList.pop_back();
+	}
 }
 
 void Player::SetDirection(Direction _dir)

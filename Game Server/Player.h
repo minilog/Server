@@ -17,6 +17,7 @@ public:
 	Player(int _ID);
 	~Player(){}
 	void Update(float _dt) override;
+	void Update_Rollback(float _dt);
 	void MakeCollision(Entity* _en) override { velocity = D3DXVECTOR2(0.f, 0.f); }
 	void Write(OutputMemoryBitStream& _os) override;
 	void SetPositionInPreviousFrame(int _preFrame);

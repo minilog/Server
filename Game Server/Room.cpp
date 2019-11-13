@@ -137,7 +137,7 @@ void Room::HandleInputs()
 					}
 
 					// update
-					player->Update(1 / 60.f);
+					player->Update_Rollback(1 / 60.f);
 
 					printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 				}
