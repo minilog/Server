@@ -7,12 +7,19 @@
 #include "Packet.h"
 #include <map>
 #include "Player.h"
+#include "Bullet.h"
 
 struct PlayerInput
 {
-	int playerID = 0;
-	Direction direction = D_Stand;
-	int time = 0;
+	int playerID = -1;
+	Direction direction = Direction(-1);
+	int time = -1;
+};
+
+struct PlayerShoot
+{
+	int playerID = -1;
+	int time = -1;
 };
 
 using namespace std;
@@ -27,7 +34,9 @@ class Room
 	// IN BATTLE
 	GameMap* map;
 	vector<Player*> playerList;
+	vector<Bullet*> bulletList;
 	vector<PlayerInput*> pInputList;
+	vector<PlayerShoot*> pShootList;
 
 public:
 	vector<bool> playerInRoomList;

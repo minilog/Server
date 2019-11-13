@@ -10,6 +10,7 @@ Room::Room(int _networkID)
 	{
 		playerInRoomList.push_back(false);
 		playerReadyList.push_back(false);
+
 	}
 }
 
@@ -48,7 +49,7 @@ void Room::Update(float _dt)
 		{
 			OutputMemoryBitStream os;
 			
-			os.Write(PT_PlayerInput, NBit_PacketType);
+			os.Write(PT_World, NBit_PacketType);
 			os.Write((int)GetTickCount(), NBit_Time); // write server time
 
 			for (auto player : playerList)
@@ -58,6 +59,8 @@ void Room::Update(float _dt)
 
 			client->Send(os);
 		}
+
+		//for (auto brick : )
 
 		count = 0;
 	}
@@ -78,9 +81,9 @@ void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 	}
 }
 
-
 void Room::HandleInputs()
 {
+	// xử lý rollback di chuyển của players
 	while (!pInputList.empty())
 	{
 		PlayerInput* input = pInputList.at(pInputList.size() - 1);
@@ -111,13 +114,11 @@ void Room::HandleInputs()
 
 			{
 				printf("Receive input from Player %i, Room %i, Dir = %i\n", input->playerID, ID, input->direction);
+				printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 
 				player->LastReceiveTime = input->time;
-
 				player->SetPositionInPreviousFrame(nFramePrevious);
 				player->SetDirection(input->direction);
-
-				printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 			}
 
 			// chạy frame liên tục cho đến hiện tại
@@ -229,13 +230,21 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 		isPlaying = true;
 		startingTime = (int)GetTickCount();
 
-		// init players
+		// khởi tạo player
 		for (int i = 0; i < 4; i++)
 		{
 			if (playerInRoomList[i] == true)
 			{
 				Player* player = new Player(i);
 				playerList.push_back(player);
+
+				// tạo 4 bullet cho mỗi player
+				for (int j = 0; j < 4; j++)
+				{
+					Bullet* bullet = new Bullet(j, i);
+					bulletList.push_back(bullet);
+					player->AddBullet(bullet);
+				}
 			}
 		}
 

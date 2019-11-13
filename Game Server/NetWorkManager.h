@@ -12,7 +12,6 @@ public:
 	NetWorkManager();
 	~NetWorkManager() {}
 	void Update(float dt);
-	void HandlePlayerInputs();
 	void ReceivePacket();
 };
 

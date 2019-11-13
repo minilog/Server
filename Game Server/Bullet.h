@@ -4,7 +4,7 @@
 
 class Bullet : public Entity
 {
-	const float speed = 500.f;
+	const float speed = 400.f;
 	Direction direction; // hướng bay
 public:
 	int PlayerID = -1; // là của người chơi nào
@@ -33,6 +33,14 @@ public:
 	void MakeCollision(Entity* _en) override
 	{
 		IsDelete = true;
+	}
+
+	void Write(OutputMemoryBitStream& _os)
+	{
+		_os.Write(IsDelete);
+		_os.Write((int)position.x, NBit_Position);
+		_os.Write((int)position.y, NBit_Position);
+		_os.Write(direction, NBit_Direction);
 	}
 
 	// thay đổi vận tốc đựa theo hướng bay

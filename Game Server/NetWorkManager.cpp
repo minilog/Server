@@ -34,11 +34,6 @@ NetWorkManager::NetWorkManager()
 	}
 }
 
-void NetWorkManager::HandlePlayerInputs()
-{
-
-}
-
 void NetWorkManager::Update(float _dt)
 {
 	for (auto room : roomList)
@@ -214,6 +209,12 @@ void NetWorkManager::ReceivePacket()
 						if (packetType == PT_PlayerInput)
 						{
 							roomList[socket->PlayerRoomID]->HandlePlayerInput(socket, is);
+						}
+
+						if (packetType == PT_PlayerShoot)
+						{
+							int time = 0;
+							is.Read(time, NBit_Time);
 						}
 
 						// clear the byte is reading

@@ -27,7 +27,9 @@ enum PacketType
 	PT_StartGame,
 	PT_GameState,
 	PT_ReadyCancel,
-	PT_PlayerInput
+	PT_PlayerInput,
+	PT_World,
+	PT_PlayerShoot
 };
 
 // [0, 10] => 4 bit

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 #include "Bullet.h"
@@ -10,6 +10,8 @@ class Player : public Entity
 	Direction direction = D_Stand;
 	int level = 1;
 	std::vector<D3DXVECTOR2> positionList; // save 30 frames
+	std::vector<Bullet*> bulletList; // trỏ đến
+
 public:
 	int LastReceiveTime = -1;
 
@@ -22,5 +24,6 @@ public:
 	void Write(OutputMemoryBitStream& _os) override;
 	void SetPositionInPreviousFrame(int _preFrame);
 	void SetDirection(Direction _dir);
+	void AddBullet(Bullet* _b) { bulletList.push_back(_b); }
 };
 
