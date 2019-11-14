@@ -12,10 +12,12 @@
 #include "Boundary.h"
 #include "GameCollision.h"
 #include "QuadTree.h"
+#include "BrickNormal.h"
 
 class GameMap
 {
 	std::vector<Brick*> brickList;
+	std::vector<BrickNormal*> brickNorList;
 	Tmx::Map                *map;
 
 public:
@@ -24,6 +26,7 @@ public:
 
 	Tmx::Map* GetMap() { return map; }
 	std::vector<Brick*> GetBrickList() { return brickList; }
+	std::vector<BrickNormal*> GetBrickNorList() { return brickNorList; }
 
 // support
 private:

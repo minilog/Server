@@ -35,8 +35,8 @@ class Room
 	GameMap* map;
 	vector<Player*> playerList;
 	vector<Bullet*> bulletList;
-	vector<PlayerInput*> pInputList;
-	vector<PlayerShoot*> pShootList;
+	vector<PlayerInput> pInputList;
+	vector<PlayerShoot> pShootList;
 
 public:
 	vector<bool> playerInRoomList;
@@ -47,11 +47,13 @@ public:
 	~Room() {}
 	void Update(float _dt);
 	void WriteUpdateRooms(OutputMemoryBitStream& _os);
-	void HandlePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);
+	void ReceivePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);
+	void ReceivePlayerShoot(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);
 	void HandlePlayerOutRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerJoinRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket);
 	void HandleInputs();
+	void HandleShoots();
 	int GetID() { return ID; }
 	int GetNPlayer() { return (int)clientList.size(); }
 

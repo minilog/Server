@@ -19,12 +19,15 @@ void Room::Update(float _dt)
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
+	HandleShoots();
+
 	HandleInputs();
 
 	for (auto brick : map->GetBrickList())
 	{
 		if (!brick->IsDelete)
 		{
+			// players va chạm bricks
 			for (auto player : playerList)
 			{
 				if (GameCollision::IsCollideInNextFrame(player, brick, _dt))
@@ -32,10 +35,27 @@ void Room::Update(float _dt)
 					player->MakeCollision(brick);
 				}
 			}
+
+			// bullets va chạm bricks
+			{
+				for (auto bullet : bulletList)
+				{
+					if (GameCollision::IsCollideInNextFrame(bullet, brick, _dt))
+					{
+						bullet->MakeCollision(brick);
+						brick->MakeCollision(bullet);
+					}
+				}
+			}
 		}
 	}
 
 	// update
+	for (auto bullet : bulletList)
+	{
+		bullet->Update(_dt);
+	}
+
 	for (auto player : playerList)
 	{
 		player->Update(_dt);
@@ -43,8 +63,10 @@ void Room::Update(float _dt)
 
 	// send world
 	count++;
-	if (count >= 3)
+	if (count >= 4)
 	{
+		count = 0;
+
 		for (auto client : clientList)
 		{
 			OutputMemoryBitStream os;
@@ -57,12 +79,20 @@ void Room::Update(float _dt)
 				player->Write(os);
 			}
 
+			// gửi bulletList
+			for (auto bullet : bulletList)
+			{
+				bullet->Write(os);
+			}
+
+			// gửi brickNormalList
+			for (auto brick : map->GetBrickNorList())
+			{
+				os.Write(brick->IsDelete);
+			}
+
 			client->Send(os);
 		}
-
-		//for (auto brick : )
-
-		count = 0;
 	}
 }
 
@@ -86,40 +116,42 @@ void Room::HandleInputs()
 	// xử lý rollback di chuyển của players
 	while (!pInputList.empty())
 	{
-		PlayerInput* input = pInputList.at(pInputList.size() - 1);
+		PlayerInput input = pInputList.at(pInputList.size() - 1);
+		pInputList.pop_back();
 
+		// xử lý chính
 		{
-			int nFramePrevious = (int)(((int)GetTickCount() - input->time) / (1000.f / 60.f)); // số frame đã trôi qua
+			int nFramePrevious = (int)(((int)GetTickCount() - input.time) / (1000.f / 60.f)); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
 			{
-				if (p->ID == input->playerID)
+				if (p->ID == input.playerID)
 				{
 					player = p;
 					break;
 				}
 			}
 
+			// nhận ngay tức thì => ko roll back
 			if (nFramePrevious <= 0)
 			{
-				player->SetDirection(input->direction);
-				printf("Receive input from Player %i, Room %i, Dir = %i\n", input->playerID, ID, input->direction);
+				player->SetDirection(input.direction);
+				printf("Receive input from Player %i, Room %i, Dir = %i\n", input.playerID, ID, input.direction);
 				return;
 			}
 
 			// không nhận các packet trễ
-			if (nFramePrevious >= 30 || player->LastReceiveTime >= input->time)
+			if (nFramePrevious >= 30 || player->LastReceiveTime >= input.time)
 				return;
 
-			{
-				printf("Receive input from Player %i, Room %i, Dir = %i\n", input->playerID, ID, input->direction);
-				printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
+			player->LastReceiveTime = input.time;
 
-				player->LastReceiveTime = input->time;
-				player->SetPositionInPreviousFrame(nFramePrevious);
-				player->SetDirection(input->direction);
-			}
+			printf("Receive input from Player %i, Room %i, Dir = %i\n", input.playerID, ID, input.direction);
+			printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
+			
+			player->SetPositionInPreviousFrame(nFramePrevious);
+			player->SetDirection(input.direction);
 
 			// chạy frame liên tục cho đến hiện tại
 			{
@@ -144,13 +176,73 @@ void Room::HandleInputs()
 				}
 			}
 		}
-
-		pInputList.pop_back();
-		delete input;
 	}
 }
 
-void Room::HandlePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is)
+void Room::HandleShoots()
+{
+	// xử lý rollback player bắn đạn
+	while (!pShootList.empty())
+	{
+		PlayerShoot pShoot = pShootList.at(pShootList.size() - 1);
+		pShootList.pop_back();
+
+		// xử lý chính
+		{
+			int nFramePrevious = (int)(((int)GetTickCount() - pShoot.time) / (1000.f / 60.f)); // số frame đã trôi qua
+
+			 // xác định player gửi input
+			Player* player = nullptr;
+			for (auto p : playerList)
+			{
+				if (p->ID == pShoot.playerID)
+				{
+					player = p;
+					break;
+				}
+			}
+
+			// nhận ngay tức thì => ko roll back
+			if (nFramePrevious <= 0)
+			{
+				player->SpawnBulletInPreviousFrame(0);
+				printf("Receive Shoot from Player %i, Room %i", pShoot.playerID, ID);
+				return;
+			}
+
+			// không nhận các packet trễ
+			if (nFramePrevious >= 30 || player->LastShootTime >= pShoot.time)
+				return;
+
+			player->LastShootTime = pShoot.time;
+
+			printf("Receive Shoot from Player %i, Room %i", pShoot.playerID, ID);
+			Bullet* bullet = player->SpawnBulletInPreviousFrame(nFramePrevious);
+
+			// chạy frame liên tục cho đến hiện tại
+			for (int i = 0; i < nFramePrevious; i++)
+			{
+				for (auto brick : map->GetBrickList())
+				{
+					if (!brick->IsDelete)
+					{
+						// bullet va chạm bricks
+						if (GameCollision::IsCollideInNextFrame(bullet, brick, 1 / 60.f))
+						{
+							bullet->MakeCollision(brick);
+							brick->MakeCollision(bullet);
+						}
+					}
+				}
+
+				// update
+				bullet->Update(1 / 60.0f);
+			}
+		}
+	}
+}
+
+void Room::ReceivePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is)
 {
 	int receiveTime = 0;
 	_is.Read(receiveTime, NBit_Time);
@@ -158,12 +250,24 @@ void Room::HandlePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _
 	Direction dir = D_Stand;
 	_is.Read(dir, NBit_Direction);
 
-	PlayerInput* pInput = new PlayerInput();
-	pInput->playerID = _playerSocket->PlayerID;
-	pInput->direction = dir;
-	pInput->time = receiveTime;
+	PlayerInput pInput;
+	pInput.playerID = _playerSocket->PlayerID;
+	pInput.direction = dir;
+	pInput.time = receiveTime;
 
 	pInputList.push_back(pInput);
+}
+
+void Room::ReceivePlayerShoot(TCPSocketPtr _playerSocket, InputMemoryBitStream & _is)
+{
+	int receiveTime = 0;
+	_is.Read(receiveTime, NBit_Time);
+
+	PlayerShoot pShoot;
+	pShoot.playerID = _playerSocket->PlayerID;
+	pShoot.time = receiveTime;
+
+	pShootList.push_back(pShoot);
 }
 
 void Room::HandlePlayerOutRoom(TCPSocketPtr _playerSocket)

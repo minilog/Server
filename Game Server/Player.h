@@ -10,10 +10,12 @@ class Player : public Entity
 	Direction direction = D_Stand;
 	int level = 1;
 	std::vector<D3DXVECTOR2> positionList; // save 30 frames
+	std::vector<Direction> directionList; // dùng để rollback bắn đạn
 	std::vector<Bullet*> bulletList; // trỏ đến
 
 public:
 	int LastReceiveTime = -1;
+	int LastShootTime = -1;
 
 public:
 	Player(int _ID);
@@ -25,5 +27,6 @@ public:
 	void SetPositionInPreviousFrame(int _preFrame);
 	void SetDirection(Direction _dir);
 	void AddBullet(Bullet* _b) { bulletList.push_back(_b); }
+	Bullet* SpawnBulletInPreviousFrame(int _preFrame);
 };
 

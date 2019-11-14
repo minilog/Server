@@ -43,6 +43,33 @@ public:
 		_os.Write(direction, NBit_Direction);
 	}
 
+	void Spawn(D3DXVECTOR2 _pos, Direction _dir)
+	{
+		IsDelete = false;
+
+		position = _pos;
+
+		// thay đổi position bắt đầu dựa theo hướng của tank
+		if (_dir == D_Left)
+		{
+			position.x -= 14;
+		}
+		else if (_dir == D_Right)
+		{
+			position.x += 14;
+		}
+		else if (_dir == D_Up)
+		{
+			position.y -= 14;
+		}
+		else if (_dir == D_Down)
+		{
+			position.y += 14;
+		}
+
+		SetDirection(_dir);
+	}
+
 	// thay đổi vận tốc đựa theo hướng bay
 	void SetDirection(Direction _dir)
 	{

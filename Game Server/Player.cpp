@@ -28,6 +28,7 @@ Player::Player(int _ID)
 	for (int i = 0; i < 30; i++)
 	{
 		positionList.push_back(position);
+		directionList.push_back(D_Stand);
 	}
 }
 
@@ -38,6 +39,9 @@ void Player::Update(float _dt)
 	// delete in the begin, add in the end
 	positionList.erase(positionList.begin());
 	positionList.push_back(position);
+
+	directionList.erase(directionList.begin());
+	directionList.push_back(direction);
 }
 
 void Player::Update_Rollback(float _dt)
@@ -45,6 +49,7 @@ void Player::Update_Rollback(float _dt)
 	position += velocity * _dt;
 
 	positionList.push_back(position);
+	directionList.push_back(direction);
 }
 
 void Player::Write(OutputMemoryBitStream & _os)
@@ -64,6 +69,7 @@ void Player::SetPositionInPreviousFrame(int _preFrame)
 	for (int i = 0; i < _preFrame; i++)
 	{
 		positionList.pop_back();
+		directionList.pop_back();
 	}
 }
 
@@ -117,4 +123,20 @@ void Player::SetDirection(Direction _dir)
 		}
 		break;
 	}
+}
+
+Bullet* Player::SpawnBulletInPreviousFrame(int _preFrame)
+{
+	for (auto bullet : bulletList)
+	{
+		if (bullet->IsDelete == true)
+		{
+			//bullet->Spawn(positionList[30 - _preFrame - 1], directionList[30 - _preFrame - 1]);
+			bullet->Spawn(position, direction);
+			return bullet;
+			break;
+		}
+	}
+
+	return nullptr; // ERROR
 }

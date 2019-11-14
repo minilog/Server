@@ -41,6 +41,7 @@ void GameMap::LoadMap(char* filePath)
 							if (layer->GetName() == "Brick")
 							{
 								brick = new BrickNormal(pos);
+								brickNorList.push_back((BrickNormal*)brick);
 							}
 							else if (layer->GetName() == "Metal Brick")
 							{

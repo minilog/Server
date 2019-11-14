@@ -208,13 +208,12 @@ void NetWorkManager::ReceivePacket()
 
 						if (packetType == PT_PlayerInput)
 						{
-							roomList[socket->PlayerRoomID]->HandlePlayerInput(socket, is);
+							roomList[socket->PlayerRoomID]->ReceivePlayerInput(socket, is);
 						}
 
 						if (packetType == PT_PlayerShoot)
 						{
-							int time = 0;
-							is.Read(time, NBit_Time);
+							roomList[socket->PlayerRoomID]->ReceivePlayerShoot(socket, is);
 						}
 
 						// clear the byte is reading
