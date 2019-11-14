@@ -44,10 +44,6 @@ int main()
 
 	while (1)
 	{
-		/*if (net_work->isStart)
-		{*/
-
-
 		_gameTime->update();
 		_detalTime = _gameTime->getTotalTime() - _lastTime;
 
@@ -58,7 +54,7 @@ int main()
 		}
 		else
 		{
-			Sleep((tickPerFrame - _detalTime) * 1000.0f);
+			Sleep((DWORD)((tickPerFrame - _detalTime) * 1000.0f));
 		}
 	}
 
