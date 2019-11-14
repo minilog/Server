@@ -226,11 +226,14 @@ void Room::HandleShoots()
 				{
 					if (!brick->IsDelete)
 					{
-						// bullet va chạm bricks
-						if (GameCollision::IsCollideInNextFrame(bullet, brick, 1 / 60.f))
+						if (bullet->IsDelete == false)
 						{
-							bullet->MakeCollision(brick);
-							brick->MakeCollision(bullet);
+							// bullet va chạm bricks
+							if (GameCollision::IsCollideInNextFrame(bullet, brick, 1 / 60.f))
+							{
+								bullet->MakeCollision(brick);
+								brick->MakeCollision(bullet);
+							}
 						}
 					}
 				}

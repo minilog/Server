@@ -28,7 +28,7 @@ Player::Player(int _ID)
 	for (int i = 0; i < 30; i++)
 	{
 		positionList.push_back(position);
-		directionList.push_back(D_Stand);
+		shootDirList.push_back(D_Stand);
 	}
 }
 
@@ -40,8 +40,8 @@ void Player::Update(float _dt)
 	positionList.erase(positionList.begin());
 	positionList.push_back(position);
 
-	directionList.erase(directionList.begin());
-	directionList.push_back(direction);
+	shootDirList.erase(shootDirList.begin());
+	shootDirList.push_back(shootDirection);
 }
 
 void Player::Update_Rollback(float _dt)
@@ -49,7 +49,7 @@ void Player::Update_Rollback(float _dt)
 	position += velocity * _dt;
 
 	positionList.push_back(position);
-	directionList.push_back(direction);
+	shootDirList.push_back(shootDirection);
 }
 
 void Player::Write(OutputMemoryBitStream & _os)
@@ -69,7 +69,7 @@ void Player::SetPositionInPreviousFrame(int _preFrame)
 	for (int i = 0; i < _preFrame; i++)
 	{
 		positionList.pop_back();
-		directionList.pop_back();
+		shootDirList.pop_back();
 	}
 }
 
@@ -123,6 +123,11 @@ void Player::SetDirection(Direction _dir)
 		}
 		break;
 	}
+
+	if (direction != D_Stand)
+	{
+		shootDirection = direction;
+	}
 }
 
 Bullet* Player::SpawnBulletInPreviousFrame(int _preFrame)
@@ -131,8 +136,7 @@ Bullet* Player::SpawnBulletInPreviousFrame(int _preFrame)
 	{
 		if (bullet->IsDelete == true)
 		{
-			//bullet->Spawn(positionList[30 - _preFrame - 1], directionList[30 - _preFrame - 1]);
-			bullet->Spawn(position, direction);
+			bullet->Spawn(positionList[30 - _preFrame - 1], shootDirList[30 - _preFrame - 1]);
 			return bullet;
 			break;
 		}

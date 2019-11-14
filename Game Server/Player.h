@@ -8,9 +8,10 @@ class Player : public Entity
 	const float speed1 = 200.f;
 	const float speed2 = 250.f;
 	Direction direction = D_Stand;
+	Direction shootDirection = D_Up;
 	int level = 1;
 	std::vector<D3DXVECTOR2> positionList; // save 30 frames
-	std::vector<Direction> directionList; // dùng để rollback bắn đạn
+	std::vector<Direction> shootDirList; // dùng để rollback bắn đạn
 	std::vector<Bullet*> bulletList; // trỏ đến
 
 public:
