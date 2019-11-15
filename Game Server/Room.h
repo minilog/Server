@@ -8,6 +8,7 @@
 #include <map>
 #include "Player.h"
 #include "Bullet.h"
+#include "NPC.h"
 
 struct PlayerInput
 {
@@ -37,6 +38,7 @@ class Room
 	vector<Bullet*> bulletList;
 	vector<PlayerInput> pInputList;
 	vector<PlayerShoot> pShootList;
+	NPC* npc;
 
 public:
 	vector<bool> playerInRoomList;
@@ -45,14 +47,14 @@ public:
 public:
 	Room(int _networkID);
 	~Room() {}
-	void Update(float _dt);
+	void Update(float _dt, double _time = 0.0f);
 	void WriteUpdateRooms(OutputMemoryBitStream& _os);
 	void ReceivePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);
 	void ReceivePlayerShoot(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);
 	void HandlePlayerOutRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerJoinRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket);
-	void HandleInputs();
+	void HandleInputs(double _time);
 	void HandleShoots();
 	int GetID() { return ID; }
 	int GetNPlayer() { return (int)clientList.size(); }

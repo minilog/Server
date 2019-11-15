@@ -34,11 +34,11 @@ NetWorkManager::NetWorkManager()
 	}
 }
 
-void NetWorkManager::Update(float _dt)
+void NetWorkManager::Update(float _dt, double _time)
 {
 	for (auto room : roomList)
 	{
-		room->Update(_dt);
+		room->Update(_dt, _time);
 	}
 }
 

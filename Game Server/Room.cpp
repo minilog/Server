@@ -10,18 +10,21 @@ Room::Room(int _networkID)
 	{
 		playerInRoomList.push_back(false);
 		playerReadyList.push_back(false);
-
 	}
+
+
 }
 
-void Room::Update(float _dt)
+void Room::Update(float _dt, double _time)
 {
+	//int tickThisFrame = (int)GetTickCount();
+
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
 	HandleShoots();
 
-	HandleInputs();
+	HandleInputs(_time);
 
 	for (auto brick : map->GetBrickList())
 	{
@@ -47,6 +50,15 @@ void Room::Update(float _dt)
 					}
 				}
 			}
+
+			// npc va chạm bricks
+			if (npc->IsDelete == false)
+			{
+				if (GameCollision::IsCollideInNextFrame(npc, brick, _dt))
+				{
+					npc->MakeCollision(brick);
+				}
+			}
 		}
 	}
 
@@ -55,11 +67,11 @@ void Room::Update(float _dt)
 	{
 		bullet->Update(_dt);
 	}
-
 	for (auto player : playerList)
 	{
 		player->Update(_dt);
 	}
+	npc->Update(_dt);
 
 	// send world
 	count++;
@@ -74,6 +86,7 @@ void Room::Update(float _dt)
 			os.Write(PT_World, NBit_PacketType);
 			os.Write((int)GetTickCount(), NBit_Time); // write server time
 
+			// gửi playerList
 			for (auto player : playerList)
 			{
 				player->Write(os);
@@ -84,6 +97,9 @@ void Room::Update(float _dt)
 			{
 				bullet->Write(os);
 			}
+
+			// gửi npc
+			npc->Write(os);
 
 			// gửi brickNormalList
 			for (auto brick : map->GetBrickNorList())
@@ -111,7 +127,7 @@ void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 	}
 }
 
-void Room::HandleInputs()
+void Room::HandleInputs(double _time)
 {
 	// xử lý rollback di chuyển của players
 	while (!pInputList.empty())
@@ -121,7 +137,7 @@ void Room::HandleInputs()
 
 		// xử lý chính
 		{
-			int nFramePrevious = (int)(((int)GetTickCount() - input.time) / (1000.f / 60.f)); // số frame đã trôi qua
+			int nFramePrevious = (int)((_time + 0.003f - (double)input.time) / (double)(1000 / 60.f)); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
@@ -354,6 +370,9 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 				}
 			}
 		}
+
+		// khởi tạo NPC
+		npc = new NPC(0);
 
 		printf("Game in room = %i start\n", ID);
 	}

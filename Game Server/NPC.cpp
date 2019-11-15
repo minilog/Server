@@ -1,4 +1,5 @@
-#include "NPC.h"
+﻿#include "NPC.h"
+#include <time.h>
 
 NPC::NPC(int _ID)
 {
@@ -6,16 +7,65 @@ NPC::NPC(int _ID)
 
 	Type = ET_NPC;
 	IsDelete = true;
-	width = 32;
-	height = 32;
+	width = 28;
+	height = 28;
 }
 
 void NPC::Update(float _dt)
 {
-	if (IsDelete)
-		return;
+	if (IsDelete == true)
+	{
+		count_Spawn -= _dt;
+		if (count_Spawn <= 0)
+		{
+			// spawn NPC tại đây
+			int random = rand() % 4; // random = 0 - 3
+			IsDelete = false;
+			position = D3DXVECTOR2(250.0f, 250.0f);
+			SetDirection(D_Right);
 
-	position += velocity * _dt;
+			count_Spawn = 2.0f;
+		}
+	}
+	else
+	{
+		count_ChangeDirection -= _dt;
+		if (count_ChangeDirection <= 0 || direction == D_Stand)
+		{
+			count_ChangeDirection = 2.0f;
+			int random = rand() % 4;
+			if (random == 0)
+			{
+				SetDirection(D_Left);
+			}
+			else if (random == 1)
+			{
+				SetDirection(D_Right);
+			}
+			else if (random == 2)
+			{
+				SetDirection(D_Up);
+			}
+			else if (random == 3)
+			{
+				SetDirection(D_Down);
+			}
+			return;
+		}
+
+		position += velocity * _dt;
+	}
+}
+
+void NPC::Write(OutputMemoryBitStream & _os)
+{
+	int x = (int)position.x;
+	int y = (int)position.y;
+
+	_os.Write(x * 10, NBit_Position);
+	_os.Write(y * 10, NBit_Position);
+	_os.Write(direction, NBit_Direction);
+	_os.Write(IsDelete);
 }
 
 void NPC::SetDirection(Direction _dir)
