@@ -15,16 +15,16 @@ Room::Room(int _networkID)
 
 }
 
-void Room::Update(float _dt, double _time)
+void Room::Update(float dt)
 {
-	//int tickThisFrame = (int)GetTickCount();
+	int tickThisFrame = (int)GetTickCount();
 
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
 	HandleShoots();
 
-	HandleInputs(_time);
+	HandleInputs(tickThisFrame);
 
 	for (auto brick : map->GetBrickList())
 	{
@@ -33,7 +33,7 @@ void Room::Update(float _dt, double _time)
 			// players va chạm bricks
 			for (auto player : playerList)
 			{
-				if (GameCollision::IsCollideInNextFrame(player, brick, _dt))
+				if (GameCollision::IsCollideInNextFrame(player, brick, dt))
 				{
 					player->MakeCollision(brick);
 				}
@@ -43,7 +43,7 @@ void Room::Update(float _dt, double _time)
 			{
 				for (auto bullet : bulletList)
 				{
-					if (GameCollision::IsCollideInNextFrame(bullet, brick, _dt))
+					if (GameCollision::IsCollideInNextFrame(bullet, brick, dt))
 					{
 						bullet->MakeCollision(brick);
 						brick->MakeCollision(bullet);
@@ -54,7 +54,7 @@ void Room::Update(float _dt, double _time)
 			// npc va chạm bricks
 			if (npc->IsDelete == false)
 			{
-				if (GameCollision::IsCollideInNextFrame(npc, brick, _dt))
+				if (GameCollision::IsCollideInNextFrame(npc, brick, dt))
 				{
 					npc->MakeCollision(brick);
 				}
@@ -65,13 +65,13 @@ void Room::Update(float _dt, double _time)
 	// update
 	for (auto bullet : bulletList)
 	{
-		bullet->Update(_dt);
+		bullet->Update(dt);
 	}
 	for (auto player : playerList)
 	{
-		player->Update(_dt);
+		player->Update(dt);
 	}
-	npc->Update(_dt);
+	npc->Update(dt);
 
 	// send world
 	count++;

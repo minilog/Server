@@ -45,9 +45,9 @@ public:
 	vector<bool> playerReadyList;
 
 public:
-	Room(int _networkID);
+	Room(int networkID);
 	~Room() {}
-	void Update(float _dt, double _time = 0.0f);
+	void Update(float dt);
 	void WriteUpdateRooms(OutputMemoryBitStream& _os);
 	void ReceivePlayerInput(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);
 	void ReceivePlayerShoot(TCPSocketPtr _playerSocket, InputMemoryBitStream& _is);

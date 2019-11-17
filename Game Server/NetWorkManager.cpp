@@ -6,7 +6,7 @@ using namespace Define;
 
 NetWorkManager::NetWorkManager()
 {
-	// init server socket
+	// tạo server socket
 	{
 		WSADATA		wsaData;
 		WORD		wVersion = MAKEWORD(2, 2);
@@ -34,11 +34,11 @@ NetWorkManager::NetWorkManager()
 	}
 }
 
-void NetWorkManager::Update(float _dt, double _time)
+void NetWorkManager::Update(float dt)
 {
 	for (auto room : roomList)
 	{
-		room->Update(_dt, _time);
+		room->Update(dt);
 	}
 }
 
@@ -48,10 +48,10 @@ void NetWorkManager::ReceivePacket()
 	if (SocketUtil::Select(&clientSockets, &readableSockets, nullptr, nullptr, nullptr, nullptr))
 	{
 		for (const TCPSocketPtr& socket : readableSockets) {
-			// someone connect to this server
+			// ai đó kết nối vào server
 			if (socket == socketServer)
 			{
-				// add new socket
+				// thêm socket của người này vào
 				SocketAddress newClientAddress;
 				auto newSocket = socketServer->Accept(newClientAddress);
 				newSocket->ChangetoDontWait(1);
@@ -60,7 +60,7 @@ void NetWorkManager::ReceivePacket()
 
 				printf("Accept new client connection\n");
 			}
-			// someone send data
+			// ai đó gửi packet
 			else
 			{
 				char* buff = static_cast<char*>(std::malloc(1024));
@@ -75,7 +75,7 @@ void NetWorkManager::ReceivePacket()
 					int packetType;
 					while ((int)is.GetRemainingBitCount() > NBit_PacketType)
 					{
-						// define packet type first, then you can read data
+						// xác định loại packet
 						packetType = 0;
 						is.Read(packetType, NBit_PacketType);
 
@@ -216,7 +216,7 @@ void NetWorkManager::ReceivePacket()
 							roomList[socket->PlayerRoomID]->ReceivePlayerShoot(socket, is);
 						}
 
-						// clear the byte is reading
+						// dọn dẹp byte cuối của packet (khi có nhiều packet 1 lúc)
 						{
 							int nClearBit = is.GetRemainingBitCount() % 8; // số bit cần clear
 							int k;
