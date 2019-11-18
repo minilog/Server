@@ -26,8 +26,9 @@ public:
 	void MakeCollision(Entity* _en) override { velocity = D3DXVECTOR2(0.f, 0.f); }
 	void Write(OutputMemoryBitStream& _os) override;
 	void SetPositionInPreviousFrame(int _preFrame);
-	void SetDirection(Direction _dir);
+	void SetDirectionAndVelocity(Direction _dir);
 	void AddBullet(Bullet* _b) { bulletList.push_back(_b); }
 	Bullet* SpawnBulletInPreviousFrame(int _preFrame);
+	void ApplyVelocity(); // sử dụng trong update - trước khi thực hiện va chạm
 };
 

@@ -13,5 +13,8 @@ public:
 	~NetWorkManager() {}
 	void Update(float dt);
 	void ReceivePacket();
+
+private:
+	void CreateServerSocket();
 };
 

@@ -17,14 +17,19 @@ Room::Room(int _networkID)
 
 void Room::Update(float dt)
 {
-	int tickThisFrame = (int)GetTickCount();
-
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
 	HandleShoots();
 
+	int tickThisFrame = (int)GetTickCount();
 	HandleInputs(tickThisFrame);
+
+	// apply velocity
+	for (auto player : playerList)
+	{
+		player->ApplyVelocity();
+	}
 
 	for (auto brick : map->GetBrickList())
 	{
@@ -152,7 +157,7 @@ void Room::HandleInputs(double _time)
 			// nhận ngay tức thì => ko roll back
 			if (nFramePrevious <= 0)
 			{
-				player->SetDirection(input.direction);
+				player->SetDirectionAndVelocity(input.direction);
 				printf("Receive input from Player %i, Room %i, Dir = %i\n", input.playerID, ID, input.direction);
 				return;
 			}
@@ -167,12 +172,14 @@ void Room::HandleInputs(double _time)
 			printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 			
 			player->SetPositionInPreviousFrame(nFramePrevious);
-			player->SetDirection(input.direction);
+			player->SetDirectionAndVelocity(input.direction);
 
 			// chạy frame liên tục cho đến hiện tại
 			{
 				for (int i = 0; i < nFramePrevious; i++)
 				{
+					player->ApplyVelocity();
+
 					// va chạm các viên gạch với player này
 					for (auto brick : map->GetBrickList())
 					{

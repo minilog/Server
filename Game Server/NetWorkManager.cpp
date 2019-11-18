@@ -6,25 +6,7 @@ using namespace Define;
 
 NetWorkManager::NetWorkManager()
 {
-	// tạo server socket
-	{
-		WSADATA		wsaData;
-		WORD		wVersion = MAKEWORD(2, 2);
-		int			ret = WSAStartup(wVersion, &wsaData);
-		socketServer = SocketUtil::CreateTCPSocket();;
-		SocketAddress receivingAddres(INADDR_ANY, 8888);
-		if (socketServer->Bind(receivingAddres) == SOCKET_ERROR)
-		{
-			return;
-		};
-		if (socketServer->Listen(16) == SOCKET_ERROR)
-		{
-			return;
-		};
-		printf("Waiting connection on port 8888...\n");
-
-		clientSockets.push_back(socketServer);
-	}
+	CreateServerSocket();
 
 	// tạo 4 phòng
 	for (int i = 0; i < 4; i++)
@@ -230,4 +212,24 @@ void NetWorkManager::ReceivePacket()
 		}
 		readableSockets.clear();
 	}
+}
+
+void NetWorkManager::CreateServerSocket()
+{
+	WSADATA		wsaData;
+	WORD		wVersion = MAKEWORD(2, 2);
+	int			ret = WSAStartup(wVersion, &wsaData);
+	socketServer = SocketUtil::CreateTCPSocket();;
+	SocketAddress receivingAddres(INADDR_ANY, 8888);
+	if (socketServer->Bind(receivingAddres) == SOCKET_ERROR)
+	{
+		return;
+	};
+	if (socketServer->Listen(16) == SOCKET_ERROR)
+	{
+		return;
+	};
+	printf("Waiting connection on port 8888...\n");
+
+	clientSockets.push_back(socketServer);
 }

@@ -73,10 +73,34 @@ void Player::SetPositionInPreviousFrame(int _preFrame)
 	}
 }
 
-void Player::SetDirection(Direction _dir)
+void Player::SetDirectionAndVelocity(Direction _dir)
 {
 	// set vận tốc
 	direction = _dir;
+	
+	if (direction != D_Stand)
+	{
+		shootDirection = direction;
+	}
+}
+
+Bullet* Player::SpawnBulletInPreviousFrame(int _preFrame)
+{
+	for (auto bullet : bulletList)
+	{
+		if (bullet->IsDelete == true)
+		{
+			bullet->Spawn(positionList[30 - _preFrame - 1], shootDirList[30 - _preFrame - 1]);
+			return bullet;
+			break;
+		}
+	}
+
+	return nullptr; // ERROR
+}
+
+void Player::ApplyVelocity()
+{
 	switch (direction)
 	{
 	case D_Stand:
@@ -123,24 +147,4 @@ void Player::SetDirection(Direction _dir)
 		}
 		break;
 	}
-
-	if (direction != D_Stand)
-	{
-		shootDirection = direction;
-	}
-}
-
-Bullet* Player::SpawnBulletInPreviousFrame(int _preFrame)
-{
-	for (auto bullet : bulletList)
-	{
-		if (bullet->IsDelete == true)
-		{
-			bullet->Spawn(positionList[30 - _preFrame - 1], shootDirList[30 - _preFrame - 1]);
-			return bullet;
-			break;
-		}
-	}
-
-	return nullptr; // ERROR
 }
