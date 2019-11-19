@@ -18,5 +18,6 @@ public:
 	void ChangeHP(int amount);
 	void Write(OutputMemoryBitStream& _os) override;
 	void SetDirection(Direction _dir); // set direction & vận tốc
+	void CheckCollistion(Entity* e);
 };
 

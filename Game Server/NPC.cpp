@@ -1,5 +1,6 @@
 ﻿#include "NPC.h"
 #include <time.h>
+#include "GameCollision.h"
 
 NPC::NPC(int _ID)
 {
@@ -131,5 +132,33 @@ void NPC::SetDirection(Direction _dir)
 		break;
 	default:
 		break;
+	}
+}
+
+void NPC::CheckCollistion(Entity * e)
+{
+	if (IsDelete)
+		return;
+
+
+	CollisionResult cR = GameCollision::Get_CollisionResult(this, e);
+	if (cR.IsCollided)
+	{
+		if (cR.Side == CS_Left)
+		{
+			position.x += (float)(cR.Rect.right - cR.Rect.left) + 1;
+		}
+		else if (cR.Side == CS_Right)
+		{
+			position.x -= (float)(cR.Rect.right - cR.Rect.left) - 1;
+		}
+		else if (cR.Side == CS_Top)
+		{
+			position.y += (float)(cR.Rect.bottom - cR.Rect.top) + 1;
+		}
+		else if (cR.Side == CS_Bottom)
+		{
+			position.y -= (float)(cR.Rect.bottom - cR.Rect.top) - 1;
+		}
 	}
 }

@@ -36,6 +36,7 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(player, npc, dt))
 					{
+						npc->CheckCollistion(player);
 						player->ZeroVelocity();
 						npc->ZeroVelocity();
 					}
@@ -48,6 +49,7 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(player, player2, dt))
 					{
+						player->CheckCollision(player2);
 						player->ZeroVelocity();
 						player2->ZeroVelocity();
 					}
@@ -125,6 +127,27 @@ void Room::Update(float dt)
 					{
 						player->ChangeHP(-1);
 						bullet->IsDelete = true;
+					}
+				}
+			}
+		}
+	}
+
+	// npcs va chạm npcs
+	for (auto npc : npcList)
+	{
+		if (!npc->IsDelete)
+		{
+			// npcs va chạm bullets
+			for (auto npc2 : npcList)
+			{
+				if (!npc2->IsDelete && npc->ID != npc2->ID)
+				{
+					if (GameCollision::IsCollideInNextFrame(npc, npc2, dt))
+					{
+						npc->CheckCollistion(npc2);
+						npc->ZeroVelocity();
+						npc2->ZeroVelocity();
 					}
 				}
 			}
