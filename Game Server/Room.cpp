@@ -142,7 +142,7 @@ void Room::Update(float dt)
 
 	// send world
 	count++;
-	if (count >= 4)
+	if (count >= 3)
 	{
 		count = 0;
 
@@ -173,6 +173,7 @@ void Room::Update(float dt)
 			{
 				os.Write(brick->IsDelete);
 			}
+			os.Write(PT_World, NBit_PacketType);
 
 			client->Send(os);
 		}
@@ -229,7 +230,7 @@ void Room::HandleInputList()
 			}
 
 			// không nhận các packet trễ
-			if (nFramePrevious >= 30 || player->LastReceiveTime >= input.time)
+			if (nFramePrevious >= 16 || player->LastReceiveTime >= input.time)
 				return;
 
 			player->LastReceiveTime = input.time;
@@ -331,7 +332,7 @@ void Room::HandleShootList()
 			}
 
 			// không nhận các packet trễ
-			if (nFramePrevious >= 30 || player->LastShootTime >= pShoot.time)
+			if (nFramePrevious >= 16 || player->LastShootTime >= pShoot.time)
 				return;
 
 			player->LastShootTime = pShoot.time;
