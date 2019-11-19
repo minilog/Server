@@ -1,6 +1,12 @@
 ﻿#include "GameCollision.h"
 
-bool GameCollision::IsCollideInNextFrame(Entity *_en1, Entity *_en2, float _dt) {
+bool GameCollision::IsCollideInNextFrame(Entity *_en1, Entity *_en2, float _dt) 
+{
+	// ngăn lỗi tự phát sinh
+	if (_en1 == nullptr || _en2 == nullptr)
+	{
+		return false;
+	}
 
 	D3DXVECTOR2 currentPosition1 = _en1->GetPosition();
 	D3DXVECTOR2 currentPosition2 = _en2->GetPosition();

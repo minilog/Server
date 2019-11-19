@@ -35,8 +35,36 @@ Player::Player(int _ID)
 
 void Player::Update(float _dt)
 {
-	position += velocity * _dt;
+	if (IsDelete)
+	{
+		switch (ID)
+		{
+		case 0:
+			position = D3DXVECTOR2(55.f, 55.f);
+			break;
+		case 1:
+			position = D3DXVECTOR2(745.f, 55.f);
+			break;
+		case 2:
+			position = D3DXVECTOR2(55.f, 745.f);
+			break;
+		case 3:
+			position = D3DXVECTOR2(745.f, 745.f);
+			break;
+		}
+		SetDirection(D_Stand);
 
+		count_Spawn -= _dt;
+		if (count_Spawn <= 0)
+		{
+			count_Spawn = 2.0f;
+
+			// spawn NPC tại đây
+			IsDelete = false;
+		}
+	}
+
+	position += velocity * _dt;
 	// delete in the begin, add in the end
 	positionList.erase(positionList.begin());
 	positionList.push_back(position);
@@ -91,6 +119,8 @@ void Player::Write(OutputMemoryBitStream & _os)
 	_os.Write(x, NBit_Position);
 	_os.Write(y, NBit_Position);
 	_os.Write(direction, NBit_Direction);
+	_os.Write(shootDirection, NBit_Direction);
+	_os.Write(IsDelete);
 }	
 
 void Player::SetPositionInPreviousFrame(int _preFrame)
@@ -148,5 +178,15 @@ void Player::ApplyVelocity()
 	case D_Down:
 		velocity = D3DXVECTOR2(0.f, speed);
 		break;
+	}
+}
+
+void Player::ChangeHP(int amount)
+{
+	HP += amount;
+	if (HP <= 0)
+	{
+		HP = 2;
+		IsDelete = true;
 	}
 }

@@ -9,9 +9,11 @@ class Player : public Entity
 	Direction direction = D_Stand;
 	Direction shootDirection = D_Up;
 	int level = 1;
+	int HP = 2;
 	std::vector<D3DXVECTOR2> positionList; // save 30 frames
 	std::vector<Direction> shootDirList; // dùng để rollback bắn đạn
 	std::vector<Bullet*> bulletList; // trỏ đến
+	float count_Spawn = 3.0f;
 
 public:
 	int LastReceiveTime = -1;
@@ -29,5 +31,7 @@ public:
 	void AddBullet(Bullet* _b) { bulletList.push_back(_b); }
 	Bullet* SpawnBulletInPreviousFrame(int _preFrame);
 	void ApplyVelocity();
+	void ChangeHP(int amount);
+	void ZeroVelocity() { velocity = D3DXVECTOR2(0, 0); }
 };
 

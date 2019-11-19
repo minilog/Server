@@ -24,6 +24,40 @@ void Room::Update(float dt)
 	for (auto player : playerList)
 	{
 		player->ApplyVelocity();
+	}
+
+	for (auto player : playerList)
+	{
+		if (!player->IsDelete)
+		{	// players va chạm npcs
+			for (auto npc : npcList)
+			{
+				if (!npc->IsDelete)
+				{
+					if (GameCollision::IsCollideInNextFrame(player, npc, dt))
+					{
+						player->ZeroVelocity();
+						npc->ZeroVelocity();
+					}
+				}
+			}
+
+			for (auto player2 : playerList)
+			{
+				if (!player2->IsDelete && player->ID != player2->ID)
+				{
+					if (GameCollision::IsCollideInNextFrame(player, player2, dt))
+					{
+						player->ZeroVelocity();
+						player2->ZeroVelocity();
+					}
+				}
+			}
+		}
+	}
+
+	for (auto player : playerList)
+	{
 		player->Update(dt);
 	}
 
@@ -69,6 +103,7 @@ void Room::Update(float dt)
 	{
 		if (!bullet->IsDelete)
 		{
+			// npcs va chạm bullets
 			for (auto npc : npcList)
 			{
 				if (!npc->IsDelete)
@@ -76,6 +111,19 @@ void Room::Update(float dt)
 					if (GameCollision::IsCollideInNextFrame(npc, bullet, dt))
 					{
 						npc->ChangeHP(-1);
+						bullet->IsDelete = true;
+					}
+				}
+			}
+
+			// players va chạm bullets
+			for (auto player : playerList)
+			{
+				if (!player->IsDelete && player->ID != bullet->PlayerID)
+				{
+					if (GameCollision::IsCollideInNextFrame(player, bullet, dt))
+					{
+						player->ChangeHP(-1);
 						bullet->IsDelete = true;
 					}
 				}
@@ -168,6 +216,9 @@ void Room::HandleInputList()
 				}
 			}
 
+			if (player->IsDelete)
+				return;
+
 			// nhận ngay tức thì => ko roll back
 			if (nFramePrevious <= 0)
 			{
@@ -203,6 +254,30 @@ void Room::HandleInputList()
 			{
 				for (int i = 0; i < nFramePrevious; i++)
 				{
+					player->ApplyVelocity();
+
+					for (auto npc : npcList)
+					{
+						if (!npc->IsDelete)
+						{
+							if (GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f))
+							{
+								player->ZeroVelocity();
+							}
+						}
+					}
+
+					for (auto player2 : playerList)
+					{
+						if (!player2->IsDelete && player->ID != player2->ID)
+						{
+							if (GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f))
+							{
+								player->ZeroVelocity();
+							}
+						}
+					}
+
 					player->Update_Rollback(1 / 60.f);
 
 					for (auto brick : map->GetBrickList())
@@ -244,6 +319,9 @@ void Room::HandleShootList()
 				}
 			}
 
+			if (player->IsDelete)
+				return;
+
 			// nhận ngay tức thì => ko roll back
 			if (nFramePrevious <= 0)
 			{
@@ -264,15 +342,42 @@ void Room::HandleShootList()
 			// chạy frame liên tục cho đến hiện tại
 			for (int i = 0; i < nFramePrevious; i++)
 			{
+				// bullet va chạm players
+				for (auto player : playerList)
+				{
+					if (!player->IsDelete && bullet->PlayerID != player->ID)
+					{
+						if (GameCollision::IsCollideInNextFrame(bullet, player, 1 / 60.f))
+						{
+							player->ChangeHP(-1);
+							bullet->IsDelete = true;
+						}
+					}
+				}
+
+				// bullet va chạm npcs
+				for (auto npc : npcList)
+				{
+					if (!npc->IsDelete)
+					{
+						if (GameCollision::IsCollideInNextFrame(bullet, npc, 1 / 60.f))
+						{
+							npc->ChangeHP(-1);
+							bullet->IsDelete = true;
+						}
+					}
+				}
+
+				// bullet va chạm bricks
 				for (auto brick : map->GetBrickList())
 				{
 					if (!brick->IsDelete)
 					{
-						// bullet va chạm bricks
 						if (GameCollision::IsCollideInNextFrame(bullet, brick, 1 / 60.f))
 						{
 							bullet->IsDelete = true;
-							brick->IsDelete = true;
+							if (brick->Type == ET_NormalBrick)
+								brick->IsDelete = true;
 						}
 					}
 				}
