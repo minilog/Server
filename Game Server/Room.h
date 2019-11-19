@@ -38,7 +38,7 @@ class Room
 	vector<Bullet*> bulletList;
 	vector<PlayerInput> pInputList;
 	vector<PlayerShoot> pShootList;
-	NPC* npc;
+	vector<NPC*> npcList;
 
 public:
 	vector<bool> playerInRoomList;
@@ -54,11 +54,11 @@ public:
 	void HandlePlayerOutRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerJoinRoom(TCPSocketPtr _playerSocket);
 	void HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket);
-	void HandleInputs(double _time);
-	void HandleShoots();
 	int GetID() { return ID; }
 	int GetNPlayer() { return (int)clientList.size(); }
 
 private:
 	int count = 0;
+	void HandleInputList();
+	void HandleShootList();
 };

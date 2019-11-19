@@ -30,11 +30,6 @@ public:
 		position += velocity * _dt;
 	}
 
-	void MakeCollision(Entity* _en) override
-	{
-		IsDelete = true;
-	}
-
 	void Write(OutputMemoryBitStream& _os)
 	{
 		_os.Write(IsDelete);
@@ -50,22 +45,22 @@ public:
 		position = _pos;
 
 		// thay đổi position bắt đầu dựa theo hướng của tank
-		if (_dir == D_Left)
-		{
-			position.x -= 14;
-		}
-		else if (_dir == D_Right)
-		{
-			position.x += 14;
-		}
-		else if (_dir == D_Up)
-		{
-			position.y -= 14;
-		}
-		else if (_dir == D_Down)
-		{
-			position.y += 14;
-		}
+		//if (_dir == D_Left)
+		//{
+		//	position.x -= 14;
+		//}
+		//else if (_dir == D_Right)
+		//{
+		//	position.x += 14;
+		//}
+		//else if (_dir == D_Up)
+		//{
+		//	position.y -= 14;
+		//}
+		//else if (_dir == D_Down)
+		//{
+		//	position.y += 14;
+		//}
 
 		SetDirection(_dir);
 	}

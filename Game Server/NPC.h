@@ -8,12 +8,14 @@ class NPC :public Entity
 	Direction direction; // hướng di chuyển
 	float count_Spawn = 2.0f;
 	float count_ChangeDirection = 2.0f;
+	int HP = 2;
 
 public:
 	NPC(int _ID);
 	~NPC() {}
 	void Update(float _dt) override;
-	void MakeCollision(Entity* _en) override { velocity = D3DXVECTOR2(0.f, 0.f); direction = D_Stand; }
+	void ZeroVelocity() { velocity = D3DXVECTOR2(0.f, 0.f); direction = D_Stand; }
+	void ChangeHP(int amount);
 	void Write(OutputMemoryBitStream& _os) override;
 	void SetDirection(Direction _dir); // set direction & vận tốc
 };

@@ -11,8 +11,6 @@ Room::Room(int _networkID)
 		playerInRoomList.push_back(false);
 		playerReadyList.push_back(false);
 	}
-
-
 }
 
 void Room::Update(float dt)
@@ -20,15 +18,13 @@ void Room::Update(float dt)
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
-	HandleShoots();
+	HandleShootList();
+	HandleInputList();
 
-	int tickThisFrame = (int)GetTickCount();
-	HandleInputs(tickThisFrame);
-
-	// apply velocity
 	for (auto player : playerList)
 	{
 		player->ApplyVelocity();
+		player->Update(dt);
 	}
 
 	for (auto brick : map->GetBrickList())
@@ -38,45 +34,63 @@ void Room::Update(float dt)
 			// players va chạm bricks
 			for (auto player : playerList)
 			{
-				if (GameCollision::IsCollideInNextFrame(player, brick, dt))
-				{
-					player->MakeCollision(brick);
-				}
+				player->CheckCollision(brick);
 			}
 
 			// bullets va chạm bricks
+			for (auto bullet : bulletList)
 			{
-				for (auto bullet : bulletList)
+				if (!bullet->IsDelete)
 				{
 					if (GameCollision::IsCollideInNextFrame(bullet, brick, dt))
 					{
-						bullet->MakeCollision(brick);
-						brick->MakeCollision(bullet);
+						bullet->IsDelete = true;
+						if (brick->Type == ET_NormalBrick)
+							brick->IsDelete = true;
 					}
 				}
 			}
 
-			// npc va chạm bricks
-			if (npc->IsDelete == false)
+			// npcs va chạm bricks
+			for (auto npc : npcList)
 			{
-				if (GameCollision::IsCollideInNextFrame(npc, brick, dt))
+				if (!npc->IsDelete)
 				{
-					npc->MakeCollision(brick);
+					if (GameCollision::IsCollideInNextFrame(npc, brick, dt))
+					{
+						npc->ZeroVelocity();
+					}
 				}
 			}
 		}
 	}
 
-	// update
+	for (auto bullet : bulletList)
+	{
+		if (!bullet->IsDelete)
+		{
+			for (auto npc : npcList)
+			{
+				if (!npc->IsDelete)
+				{
+					if (GameCollision::IsCollideInNextFrame(npc, bullet, dt))
+					{
+						npc->ChangeHP(-1);
+						bullet->IsDelete = true;
+					}
+				}
+			}
+		}
+	}
+
 	for (auto bullet : bulletList)
 	{
 		bullet->Update(dt);
 	}
-	for (auto player : playerList)
+	for (auto npc : npcList)
 	{
-		player->Update(dt);
+		npc->Update(dt);
 	}
-	npc->Update(dt);
 
 	// send world
 	count++;
@@ -96,16 +110,16 @@ void Room::Update(float dt)
 			{
 				player->Write(os);
 			}
-
 			// gửi bulletList
 			for (auto bullet : bulletList)
 			{
 				bullet->Write(os);
 			}
-
 			// gửi npc
-			npc->Write(os);
-
+			for (auto npc : npcList)
+			{
+				npc->Write(os);
+			}
 			// gửi brickNormalList
 			for (auto brick : map->GetBrickNorList())
 			{
@@ -124,7 +138,7 @@ void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 		_os.Write((bool)playerInRoomList[i]);
 		_os.Write((bool)playerReadyList[i]);
 	}
-
+			
 	_os.Write(isPlaying);
 	if (isPlaying)
 	{
@@ -132,7 +146,7 @@ void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 	}
 }
 
-void Room::HandleInputs(double _time)
+void Room::HandleInputList()
 {
 	// xử lý rollback di chuyển của players
 	while (!pInputList.empty())
@@ -142,7 +156,7 @@ void Room::HandleInputs(double _time)
 
 		// xử lý chính
 		{
-			int nFramePrevious = (int)((_time + 0.003f - (double)input.time) / (double)(1000 / 60.f)); // số frame đã trôi qua
+			int nFramePrevious = (int)(((int)GetTickCount() - input.time) / 16.67f); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
@@ -157,7 +171,8 @@ void Room::HandleInputs(double _time)
 			// nhận ngay tức thì => ko roll back
 			if (nFramePrevious <= 0)
 			{
-				player->SetDirectionAndVelocity(input.direction);
+				player->SetDirection(input.direction);
+				player->ApplyVelocity();
 				printf("Receive input from Player %i, Room %i, Dir = %i\n", input.playerID, ID, input.direction);
 				return;
 			}
@@ -172,28 +187,32 @@ void Room::HandleInputs(double _time)
 			printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 			
 			player->SetPositionInPreviousFrame(nFramePrevious);
-			player->SetDirectionAndVelocity(input.direction);
+			player->SetDirection(input.direction);
+			player->ApplyVelocity();
+
+			// va chạm 1 lần trước
+			for (auto brick : map->GetBrickList())
+			{
+				if (!brick->IsDelete)
+				{
+					player->CheckCollision(brick);
+				}
+			}
 
 			// chạy frame liên tục cho đến hiện tại
 			{
 				for (int i = 0; i < nFramePrevious; i++)
 				{
-					player->ApplyVelocity();
+					player->Update_Rollback(1 / 60.f);
 
-					// va chạm các viên gạch với player này
 					for (auto brick : map->GetBrickList())
 					{
 						if (!brick->IsDelete)
 						{
-							if (GameCollision::IsCollideInNextFrame(player, brick, 1 / 60.f))
-							{
-								player->MakeCollision(brick);
-							}
+							// player va chạm bricks
+							player->CheckCollision(brick);
 						}
 					}
-
-					// update
-					player->Update_Rollback(1 / 60.f);
 
 					printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 				}
@@ -202,7 +221,7 @@ void Room::HandleInputs(double _time)
 	}
 }
 
-void Room::HandleShoots()
+void Room::HandleShootList()
 {
 	// xử lý rollback player bắn đạn
 	while (!pShootList.empty())
@@ -212,7 +231,7 @@ void Room::HandleShoots()
 
 		// xử lý chính
 		{
-			int nFramePrevious = (int)(((int)GetTickCount() - pShoot.time) / (1000.f / 60.f)); // số frame đã trôi qua
+			int nFramePrevious = (int)(((int)GetTickCount() - pShoot.time) / 16.67f); // số frame đã trôi qua
 
 			 // xác định player gửi input
 			Player* player = nullptr;
@@ -249,14 +268,11 @@ void Room::HandleShoots()
 				{
 					if (!brick->IsDelete)
 					{
-						if (bullet->IsDelete == false)
+						// bullet va chạm bricks
+						if (GameCollision::IsCollideInNextFrame(bullet, brick, 1 / 60.f))
 						{
-							// bullet va chạm bricks
-							if (GameCollision::IsCollideInNextFrame(bullet, brick, 1 / 60.f))
-							{
-								bullet->MakeCollision(brick);
-								brick->MakeCollision(bullet);
-							}
+							bullet->IsDelete = true;
+							brick->IsDelete = true;
 						}
 					}
 				}
@@ -360,7 +376,7 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 		isPlaying = true;
 		startingTime = (int)GetTickCount();
 
-		// khởi tạo player
+		// tạo players
 		for (int i = 0; i < 4; i++)
 		{
 			if (playerInRoomList[i] == true)
@@ -378,8 +394,12 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 			}
 		}
 
-		// khởi tạo NPC
-		npc = new NPC(0);
+		// tạo 3 NPCs
+		for (auto i = 0; i < 3; i++)
+		{
+			NPC* npc = new NPC(i);
+			npcList.push_back(npc);
+		}
 
 		printf("Game in room = %i start\n", ID);
 	}

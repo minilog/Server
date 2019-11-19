@@ -13,47 +13,91 @@ NPC::NPC(int _ID)
 
 void NPC::Update(float _dt)
 {
-	if (IsDelete == true)
+	if (IsDelete)
 	{
 		count_Spawn -= _dt;
 		if (count_Spawn <= 0)
 		{
-			// spawn NPC tại đây
-			int random = rand() % 4; // random = 0 - 3
-			IsDelete = false;
-			position = D3DXVECTOR2(250.0f, 250.0f);
-			SetDirection(D_Right);
-
 			count_Spawn = 2.0f;
-		}
-	}
-	else
-	{
-		count_ChangeDirection -= _dt;
-		if (count_ChangeDirection <= 0 || direction == D_Stand)
-		{
-			count_ChangeDirection = 2.0f;
-			int random = rand() % 4;
-			if (random == 0)
-			{
-				SetDirection(D_Left);
-			}
-			else if (random == 1)
-			{
-				SetDirection(D_Right);
-			}
-			else if (random == 2)
-			{
-				SetDirection(D_Up);
-			}
-			else if (random == 3)
-			{
-				SetDirection(D_Down);
-			}
-			return;
-		}
 
-		position += velocity * _dt;
+			// spawn NPC tại đây
+			IsDelete = false;
+
+			// random position
+			int random = rand() % 4; // random = 0 - 3
+			float a = 250.0f, b = 500.0f;
+			switch (random)
+			{
+			case 0:
+				position = D3DXVECTOR2(a, a);
+				break;
+			case 1:
+				position = D3DXVECTOR2(b, a);
+				break;
+			case 2:
+				position = D3DXVECTOR2(a, b);
+				break;
+			case 3:
+				position = D3DXVECTOR2(b, b);
+				break;
+			}
+
+			// random direction
+			int random2 = rand() % 4;
+			switch (random2)
+			{
+			case 0:
+				SetDirection(D_Left);
+				break;
+			case 1:
+				SetDirection(D_Right);
+				break;
+			case 2:
+				SetDirection(D_Up);
+				break;
+			case 3:
+				SetDirection(D_Down);
+				break;
+			}
+		}
+		return;
+	}
+
+	count_ChangeDirection -= _dt;
+	if (count_ChangeDirection <= 0 || direction == D_Stand)
+	{
+		count_ChangeDirection = 2.0f;
+
+		// random direction
+		int random = rand() % 4;
+		switch (random)
+		{
+		case 0:
+			SetDirection(D_Left);
+			break;
+		case 1:
+			SetDirection(D_Right);
+			break;
+		case 2:
+			SetDirection(D_Up);
+			break;
+		case 3:
+			SetDirection(D_Down);
+			break;
+		}
+		return;
+	}
+
+	position += velocity * _dt;
+}
+
+void NPC::ChangeHP(int amount)
+{
+	HP += amount;
+	if (HP <= 0)
+	{
+		HP = 2;
+		IsDelete = true;
 	}
 }
 

@@ -5,8 +5,7 @@
 
 class Player : public Entity
 {
-	const float speed1 = 150.f;
-	const float speed2 = 250.f;
+	const float speed = 150.f;
 	Direction direction = D_Stand;
 	Direction shootDirection = D_Up;
 	int level = 1;
@@ -23,12 +22,12 @@ public:
 	~Player(){}
 	void Update(float _dt) override;
 	void Update_Rollback(float _dt);
-	void MakeCollision(Entity* _en) override { velocity = D3DXVECTOR2(0.f, 0.f); }
+	void CheckCollision(Entity* e);
 	void Write(OutputMemoryBitStream& _os) override;
 	void SetPositionInPreviousFrame(int _preFrame);
-	void SetDirectionAndVelocity(Direction _dir);
+	void SetDirection(Direction _dir);
 	void AddBullet(Bullet* _b) { bulletList.push_back(_b); }
 	Bullet* SpawnBulletInPreviousFrame(int _preFrame);
-	void ApplyVelocity(); // sử dụng trong update - trước khi thực hiện va chạm
+	void ApplyVelocity();
 };
 

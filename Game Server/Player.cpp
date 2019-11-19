@@ -1,11 +1,12 @@
 ﻿#include "Player.h"
+#include "GameCollision.h"
 
 Player::Player(int _ID)
 {
 	ID = _ID;
 	Type = ET_Player;
-	width = 28;
-	height = 28;
+	width = 32;
+	height = 32;
 
 	switch (_ID)
 	{
@@ -52,6 +53,36 @@ void Player::Update_Rollback(float _dt)
 	shootDirList.push_back(shootDirection);
 }
 
+void Player::CheckCollision(Entity * e)
+{
+	if (IsDelete)
+		return;
+
+	if (e->Type == ET_MetalBrick || e->Type == ET_NormalBrick || e->Type == ET_Boundary || e->Type == ET_Water)
+	{
+		CollisionResult cR = GameCollision::Get_CollisionResult(this, e);
+		if (cR.IsCollided)
+		{
+			if (cR.Side == CS_Left)
+			{
+				position.x += (float)(cR.Rect.right - cR.Rect.left) + 1;
+			}
+			else if (cR.Side == CS_Right)
+			{
+				position.x -= (float)(cR.Rect.right - cR.Rect.left) - 1;
+			}
+			else if (cR.Side == CS_Top)
+			{
+				position.y += (float)(cR.Rect.bottom - cR.Rect.top) + 1;
+			}
+			else if (cR.Side == CS_Bottom)
+			{
+				position.y -= (float)(cR.Rect.bottom - cR.Rect.top) - 1;
+			}
+		}
+	}
+}
+
 void Player::Write(OutputMemoryBitStream & _os)
 {
 	int x = int(position.x * 10);
@@ -73,9 +104,8 @@ void Player::SetPositionInPreviousFrame(int _preFrame)
 	}
 }
 
-void Player::SetDirectionAndVelocity(Direction _dir)
+void Player::SetDirection(Direction _dir)
 {
-	// set vận tốc
 	direction = _dir;
 	
 	if (direction != D_Stand)
@@ -107,44 +137,16 @@ void Player::ApplyVelocity()
 		velocity = D3DXVECTOR2(0.f, 0.f);
 		break;
 	case D_Left:
-		if (level == 1)
-		{
-			velocity = D3DXVECTOR2(-speed1, 0.f);
-		}
-		else
-		{
-			velocity = D3DXVECTOR2(-speed2, 0.f);
-		}
+		velocity = D3DXVECTOR2(-speed, 0.f);
 		break;
 	case D_Right:
-		if (level == 1)
-		{
-			velocity = D3DXVECTOR2(speed1, 0.f);
-		}
-		else
-		{
-			velocity = D3DXVECTOR2(speed2, 0.f);
-		}
+		velocity = D3DXVECTOR2(speed, 0.f);
 		break;
 	case D_Up:
-		if (level == 1)
-		{
-			velocity = D3DXVECTOR2(0.f, -speed1);
-		}
-		else
-		{
-			velocity = D3DXVECTOR2(0.f, -speed2);
-		}
+		velocity = D3DXVECTOR2(0.f, -speed);
 		break;
 	case D_Down:
-		if (level == 1)
-		{
-			velocity = D3DXVECTOR2(0.f, speed1);
-		}
-		else
-		{
-			velocity = D3DXVECTOR2(0.f, speed1);
-		}
+		velocity = D3DXVECTOR2(0.f, speed);
 		break;
 	}
 }

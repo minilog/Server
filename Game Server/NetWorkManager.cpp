@@ -205,9 +205,8 @@ void NetWorkManager::ReceivePacket()
 							is.Read(k, nClearBit);
 						}
 					}
-
-					free(buff);
 				}
+				free(buff);
 			}
 		}
 		readableSockets.clear();
