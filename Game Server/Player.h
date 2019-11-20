@@ -14,6 +14,7 @@ class Player : public Entity
 	std::vector<Direction> shootDirList; // dùng để rollback bắn đạn
 	std::vector<Bullet*> bulletList; // trỏ đến
 	float count_Spawn = 3.0f;
+	float count_Shoot = 0.5f;
 
 public:
 	int LastReceiveTime = -1;

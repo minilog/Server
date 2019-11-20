@@ -369,6 +369,9 @@ void Room::HandleShootList()
 
 			printf("Receive Shoot from Player %i, Room %i\n", pShoot.playerID, ID);
 			Bullet* bullet = player->SpawnBulletInPreviousFrame(nFramePrevious);
+			if (bullet == nullptr)
+				return;	
+
 
 			// chạy frame liên tục cho đến hiện tại
 			for (int i = 0; i < nFramePrevious; i++)

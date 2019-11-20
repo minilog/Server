@@ -63,6 +63,10 @@ void Player::Update(float _dt)
 			IsDelete = false;
 		}
 	}
+	else
+	{
+		count_Shoot -= _dt;
+	}
 
 	position += velocity * _dt;
 	// delete in the begin, add in the end
@@ -146,6 +150,11 @@ void Player::SetDirection(Direction _dir)
 
 Bullet* Player::SpawnBulletInPreviousFrame(int _preFrame)
 {
+	if (count_Shoot > 0)
+		return nullptr;
+
+	count_Shoot = 0.5f;
+
 	for (auto bullet : bulletList)
 	{
 		if (bullet->IsDelete == true)
