@@ -98,17 +98,12 @@ public:
 
 	void ApplyDestroyPosition()
 	{
-		if (destroyPosition.x == position.x && destroyPosition.y == position.y)
-		{
-			int random1 = rand() % 11 - 5;
-			int random2 = rand() % 11 - 5;
-			destroyPosition.x += random1 / 10.0f;
-			destroyPosition.y += random2 / 10.0f;
-		}
-		else
-		{
-			destroyPosition = position;
-		}
+		destroyPosition = position;
+
+		int random1 = rand() % 11 - 5;
+		int random2 = rand() % 11 - 5;
+		destroyPosition.x += random1 / 10.0f;
+		destroyPosition.y += random2 / 10.0f;
 	}
 };
 
