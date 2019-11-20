@@ -36,7 +36,6 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(player, npc, dt))
 					{
-						npc->CheckCollistion(player);
 						player->ZeroVelocity();
 						npc->ZeroVelocity();
 					}
@@ -80,7 +79,11 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(bullet, brick, dt))
 					{
-						bullet->IsDelete = true;
+						if (brick->Type != ET_Water)
+						{
+							bullet->IsDelete = true;
+							bullet->ApplyDestroyPosition();
+						}
 						if (brick->Type == ET_NormalBrick)
 							brick->IsDelete = true;
 					}
@@ -114,6 +117,7 @@ void Room::Update(float dt)
 					{
 						npc->ChangeHP(-1);
 						bullet->IsDelete = true;
+						bullet->ApplyDestroyPosition();
 					}
 				}
 			}
@@ -127,6 +131,7 @@ void Room::Update(float dt)
 					{
 						player->ChangeHP(-1);
 						bullet->IsDelete = true;
+						bullet->ApplyDestroyPosition();
 					}
 				}
 			}
@@ -287,6 +292,7 @@ void Room::HandleInputList()
 							if (GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f))
 							{
 								player->ZeroVelocity();
+								player->CheckCollision(npc);
 							}
 						}
 					}
@@ -298,6 +304,7 @@ void Room::HandleInputList()
 							if (GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f))
 							{
 								player->ZeroVelocity();
+								player->CheckCollision(player2);
 							}
 						}
 					}
@@ -350,7 +357,7 @@ void Room::HandleShootList()
 			if (nFramePrevious <= 0)
 			{
 				player->SpawnBulletInPreviousFrame(0);
-				printf("Receive Shoot from Player %i, Room %i", pShoot.playerID, ID);
+				printf("Receive Shoot from Player %i, Room %i\n", pShoot.playerID, ID);
 				return;
 			}
 
@@ -360,7 +367,7 @@ void Room::HandleShootList()
 
 			player->LastShootTime = pShoot.time;
 
-			printf("Receive Shoot from Player %i, Room %i", pShoot.playerID, ID);
+			printf("Receive Shoot from Player %i, Room %i\n", pShoot.playerID, ID);
 			Bullet* bullet = player->SpawnBulletInPreviousFrame(nFramePrevious);
 
 			// chạy frame liên tục cho đến hiện tại
@@ -375,6 +382,7 @@ void Room::HandleShootList()
 						{
 							player->ChangeHP(-1);
 							bullet->IsDelete = true;
+							bullet->ApplyDestroyPosition();
 						}
 					}
 				}
@@ -388,6 +396,7 @@ void Room::HandleShootList()
 						{
 							npc->ChangeHP(-1);
 							bullet->IsDelete = true;
+							bullet->ApplyDestroyPosition();
 						}
 					}
 				}
@@ -399,7 +408,11 @@ void Room::HandleShootList()
 					{
 						if (GameCollision::IsCollideInNextFrame(bullet, brick, 1 / 60.f))
 						{
-							bullet->IsDelete = true;
+							if (brick->Type != ET_Water)
+							{
+								bullet->IsDelete = true;
+								bullet->ApplyDestroyPosition();
+							}
 							if (brick->Type == ET_NormalBrick)
 								brick->IsDelete = true;
 						}

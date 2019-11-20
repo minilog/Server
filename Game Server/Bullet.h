@@ -6,6 +6,9 @@ class Bullet : public Entity
 {
 	const float speed = 400.f;
 	Direction direction; // hướng bay
+	D3DXVECTOR2 spawnPosition; // dùng để diễn trên client
+	D3DXVECTOR2 destroyPosition = D3DXVECTOR2(0, 0); // dùng để client vẽ
+
 public:
 	int PlayerID = -1; // là của người chơi nào
 
@@ -33,9 +36,13 @@ public:
 	void Write(OutputMemoryBitStream& _os)
 	{
 		_os.Write(IsDelete);
-		_os.Write((int)position.x, NBit_Position);
-		_os.Write((int)position.y, NBit_Position);
+		_os.Write((int)(position.x * 10), NBit_Position);
+		_os.Write((int)(position.y * 10), NBit_Position);
 		_os.Write(direction, NBit_Direction);
+		_os.Write((int)(spawnPosition.x * 10), NBit_Position);
+		_os.Write((int)(spawnPosition.y * 10), NBit_Position);
+		_os.Write((int)(destroyPosition.x * 10), NBit_Position);
+		_os.Write((int)(destroyPosition.y * 10), NBit_Position);
 	}
 
 	void Spawn(D3DXVECTOR2 _pos, Direction _dir)
@@ -43,24 +50,25 @@ public:
 		IsDelete = false;
 
 		position = _pos;
+		spawnPosition = _pos;
 
-		// thay đổi position bắt đầu dựa theo hướng của tank
-		//if (_dir == D_Left)
-		//{
-		//	position.x -= 14;
-		//}
-		//else if (_dir == D_Right)
-		//{
-		//	position.x += 14;
-		//}
-		//else if (_dir == D_Up)
-		//{
-		//	position.y -= 14;
-		//}
-		//else if (_dir == D_Down)
-		//{
-		//	position.y += 14;
-		//}
+		// set spawn position
+		if (_dir == D_Left)
+		{
+			spawnPosition.x -= 14;
+		}
+		else if (_dir == D_Right)
+		{
+			spawnPosition.x += 14;
+		}
+		else if (_dir == D_Up)
+		{
+			spawnPosition.y -= 14;
+		}
+		else if (_dir == D_Down)
+		{
+			spawnPosition.y += 14;
+		}
 
 		SetDirection(_dir);
 	}
@@ -85,6 +93,21 @@ public:
 			break;
 		default:
 			break;
+		}
+	}
+
+	void ApplyDestroyPosition()
+	{
+		if (destroyPosition.x == position.x && destroyPosition.y == position.y)
+		{
+			int random1 = rand() % 11 - 5;
+			int random2 = rand() % 11 - 5;
+			destroyPosition.x += random1 / 10.0f;
+			destroyPosition.y += random2 / 10.0f;
+		}
+		else
+		{
+			destroyPosition = position;
 		}
 	}
 };
