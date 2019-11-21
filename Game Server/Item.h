@@ -4,8 +4,8 @@
 
 class Item : public Entity
 {
-	const float existTime = 7.f;
-
+	float count_existTime = 7.0f; // đếm
+	float count_SpawnTime = 5.0f;
 public:
 	Item() {}
 	~Item() {}
@@ -13,13 +13,22 @@ public:
 	void Update(float _dt) override
 	{
 		if (IsDelete)
-			return;
-
-		count_existTime += _dt;
-		if (count_existTime >= existTime)
 		{
+			count_SpawnTime -= _dt;
+			if (count_SpawnTime < 0)
+			{
+				count_SpawnTime = 5.0f;
+				count_existTime = 7.0f;
+				IsDelete = false;
+			}
+			return;
+		}
+
+		count_existTime -= _dt;
+		if (count_existTime < 0)
+		{
+			count_existTime = 7.0f;
 			IsDelete = true;
-			count_existTime = 0.f;
 		}
 	}
 	
@@ -29,8 +38,6 @@ public:
 	}
 
 // các biến và hàm hỗ trợ
-private:
-	float count_existTime = 0.f; // đếm
 protected:
 	void BaseInit(D3DXVECTOR2 _pos)
 	{
