@@ -11,6 +11,19 @@ Room::Room(int _networkID)
 		playerInRoomList.push_back(false);
 		playerReadyList.push_back(false);
 	}
+
+	// tạo 3 NPCs
+	for (auto i = 0; i < 3; i++)
+	{
+		NPC* npc = new NPC(i);
+		npcList.push_back(npc);
+	}
+
+	// tạo 2 items
+	protectItem = new ProtectItem(D3DXVECTOR2(0, 0));
+	protectItem->IsDelete = true;
+	upgradeItem = new UpgradeItem(D3DXVECTOR2(0, 0));
+	upgradeItem->IsDelete = true;
 }
 
 void Room::Update(float dt)
@@ -24,6 +37,24 @@ void Room::Update(float dt)
 	for (auto player : playerList)
 	{
 		player->ApplyVelocity();
+	}
+
+	// sửa bug npc kẹt players khi hồi sinh
+	for (auto player : playerList)
+	{
+		if (!player->IsDelete)
+		{
+			for (auto npc : npcList)
+			{
+				if (!npc->IsDelete)
+				{
+					if (GameCollision::IsCollideInNextFrame(player, npc, dt))
+					{
+						npc->CheckCollistion(player);
+					}
+				}
+			}
+		}
 	}
 
 	for (auto player : playerList)
@@ -42,6 +73,7 @@ void Room::Update(float dt)
 				}
 			}
 
+			// players va chạm players
 			for (auto player2 : playerList)
 			{
 				if (!player2->IsDelete && player->ID != player2->ID)
@@ -52,6 +84,22 @@ void Room::Update(float dt)
 						player->ZeroVelocity();
 						player2->ZeroVelocity();
 					}
+				}
+			}
+
+			// plays va chạm items
+			if (!protectItem->IsDelete)
+			{
+				if (GameCollision::IsCollideInNextFrame(player, protectItem, dt))
+				{
+					protectItem->IsDelete = true;
+				}
+			}
+			if (!upgradeItem->IsDelete)
+			{
+				if (GameCollision::IsCollideInNextFrame(player, upgradeItem, dt))
+				{
+					upgradeItem->IsDelete = true;
 				}
 			}
 		}
@@ -167,6 +215,8 @@ void Room::Update(float dt)
 	{
 		npc->Update(dt);
 	}
+	protectItem->Update(dt);
+	upgradeItem->Update(dt);
 
 	// send world
 	count++;
@@ -201,6 +251,11 @@ void Room::Update(float dt)
 			{
 				os.Write(brick->IsDelete);
 			}
+			// gửi item
+			protectItem->Write(os);
+			upgradeItem->Write(os);
+
+			// gửi đuôi packet
 			os.Write(PT_World, NBit_PacketType);
 
 			client->Send(os);
@@ -537,13 +592,6 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 					player->AddBullet(bullet);
 				}
 			}
-		}
-
-		// tạo 3 NPCs
-		for (auto i = 0; i < 3; i++)
-		{
-			NPC* npc = new NPC(i);
-			npcList.push_back(npc);
 		}
 
 		printf("Game in room = %i start\n", ID);

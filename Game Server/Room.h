@@ -9,6 +9,8 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "NPC.h"
+#include "ProtectItem.h"
+#include "UpgradeItem.h"
 
 struct PlayerInput
 {
@@ -39,6 +41,8 @@ class Room
 	vector<PlayerInput> pInputList;
 	vector<PlayerShoot> pShootList;
 	vector<NPC*> npcList;
+	ProtectItem* protectItem;
+	UpgradeItem* upgradeItem;
 
 public:
 	vector<bool> playerInRoomList;

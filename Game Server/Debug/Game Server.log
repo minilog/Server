@@ -1,0 +1,9 @@
+﻿  NetWorkManager.cpp
+  Room.cpp
+  TCPServer.cpp
+c:\users\minh\desktop\server\game server\tcpserver.cpp(21): warning C4007: 'main': must be '__cdecl'
+c:\users\minh\desktop\server\game server\tcpserver.cpp(22): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\minh\desktop\server\game server\tcpserver.cpp(49): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+c:\users\minh\desktop\server\game server\tcpserver.cpp(33): warning C4101: 'msg': unreferenced local variable
+  Generating Code...
+  Game Server.vcxproj -> C:\Users\Minh\Desktop\Server\Debug\Server.exe

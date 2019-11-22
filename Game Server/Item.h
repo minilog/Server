@@ -5,7 +5,7 @@
 class Item : public Entity
 {
 	float count_existTime = 7.0f; // đếm
-	float count_SpawnTime = 5.0f;
+	float count_SpawnTime = 10.0f;
 public:
 	Item() {}
 	~Item() {}
@@ -17,8 +17,11 @@ public:
 			count_SpawnTime -= _dt;
 			if (count_SpawnTime < 0)
 			{
-				count_SpawnTime = 5.0f;
+				count_SpawnTime = 10.0f;
 				count_existTime = 7.0f;
+				int random1 = rand() % 720;
+				int random2 = rand() % 720;
+				position = D3DXVECTOR2((float)random1 + 32, (float)random2 + 32);
 				IsDelete = false;
 			}
 			return;
@@ -37,13 +40,23 @@ public:
 		IsDelete = true;
 	}
 
+	void Write(OutputMemoryBitStream& os)
+	{
+		os.Write((int)(position.x * 10), NBit_Position);
+		os.Write((int)(position.y * 10), NBit_Position);
+		os.Write(IsDelete);
+	}
+
 // các biến và hàm hỗ trợ
 protected:
 	void BaseInit(D3DXVECTOR2 _pos)
 	{
 		position = _pos;
-		width = 32;
-		height = 32;
+		width = 24;
+		height = 24;
+
+		int random = rand() % 15;
+		count_SpawnTime = (float)random;
 	}
 };
 
