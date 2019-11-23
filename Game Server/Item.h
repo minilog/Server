@@ -17,7 +17,9 @@ public:
 			count_SpawnTime -= _dt;
 			if (count_SpawnTime < 0)
 			{
-				count_SpawnTime = 10.0f;
+				int random = rand() % 20;
+				count_SpawnTime = 10.0f + (float)random;
+
 				count_existTime = 7.0f;
 				int random1 = rand() % 720;
 				int random2 = rand() % 720;
@@ -55,8 +57,8 @@ protected:
 		width = 24;
 		height = 24;
 
-		int random = rand() % 15;
-		count_SpawnTime = (float)random;
+		int random = rand() % 20;
+		count_SpawnTime = 10.0f + (float)random;
 	}
 };
 
