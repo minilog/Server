@@ -39,24 +39,6 @@ void Room::Update(float dt)
 		player->ApplyVelocity();
 	}
 
-	// sửa bug npc kẹt players khi hồi sinh
-	for (auto player : playerList)
-	{
-		if (!player->IsDelete)
-		{
-			for (auto npc : npcList)
-			{
-				if (!npc->IsDelete)
-				{
-					if (GameCollision::IsCollideInNextFrame(player, npc, dt))
-					{
-						npc->CheckCollistion(player);
-					}
-				}
-			}
-		}
-	}
-
 	for (auto player : playerList)
 	{
 		if (!player->IsDelete)
@@ -69,6 +51,7 @@ void Room::Update(float dt)
 					{
 						player->ZeroVelocity();
 						npc->ZeroVelocity();
+						npc->CheckCollision(player); // sửa lỗi kẹt lúc spawn
 					}
 				}
 			}
@@ -93,6 +76,7 @@ void Room::Update(float dt)
 				if (GameCollision::IsCollideInNextFrame(player, protectItem, dt))
 				{
 					protectItem->IsDelete = true;
+					player->ApplyShield();
 				}
 			}
 			if (!upgradeItem->IsDelete)
@@ -100,6 +84,7 @@ void Room::Update(float dt)
 				if (GameCollision::IsCollideInNextFrame(player, upgradeItem, dt))
 				{
 					upgradeItem->IsDelete = true;
+					player->LevelUp();
 				}
 			}
 		}
@@ -146,6 +131,7 @@ void Room::Update(float dt)
 					if (GameCollision::IsCollideInNextFrame(npc, brick, dt))
 					{
 						npc->ZeroVelocity();
+						npc->CheckCollision(brick);
 					}
 				}
 			}
@@ -163,7 +149,7 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(npc, bullet, dt))
 					{
-						npc->ChangeHP(-1);
+						npc->ChangeHP(-bullet->Damage);
 						bullet->IsDelete = true;
 						bullet->ApplyDestroyPosition();
 					}
@@ -177,7 +163,7 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(player, bullet, dt))
 					{
-						player->ChangeHP(-1);
+						player->ChangeHP(-bullet->Damage);
 						bullet->IsDelete = true;
 						bullet->ApplyDestroyPosition();
 					}
@@ -198,7 +184,7 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(npc, npc2, dt))
 					{
-						npc->CheckCollistion(npc2);
+						npc->CheckCollision(npc2);
 						npc->ZeroVelocity();
 						npc2->ZeroVelocity();
 					}
@@ -438,7 +424,7 @@ void Room::HandleShootList()
 					{
 						if (GameCollision::IsCollideInNextFrame(bullet, player, 1 / 60.f))
 						{
-							player->ChangeHP(-1);
+							player->ChangeHP(-bullet->Damage);
 							bullet->IsDelete = true;
 							bullet->ApplyDestroyPosition();
 						}
@@ -452,7 +438,7 @@ void Room::HandleShootList()
 					{
 						if (GameCollision::IsCollideInNextFrame(bullet, npc, 1 / 60.f))
 						{
-							npc->ChangeHP(-1);
+							npc->ChangeHP(-bullet->Damage);
 							bullet->IsDelete = true;
 							bullet->ApplyDestroyPosition();
 						}

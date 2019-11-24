@@ -135,7 +135,7 @@ void NPC::SetDirection(Direction _dir)
 	}
 }
 
-void NPC::CheckCollistion(Entity * e)
+void NPC::CheckCollision(Entity * e)
 {
 	if (IsDelete)
 		return;

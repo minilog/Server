@@ -54,8 +54,8 @@ protected:
 	void BaseInit(D3DXVECTOR2 _pos)
 	{
 		position = _pos;
-		width = 24;
-		height = 24;
+		width = 28	;
+		height = 28;
 
 		int random = rand() % 20;
 		count_SpawnTime = 10.0f + (float)random;

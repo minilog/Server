@@ -6,6 +6,7 @@
 class Player : public Entity
 {
 	const float speed = 150.f;
+	const float shieldTime = 5.0f;
 	Direction direction = D_Stand;
 	Direction shootDirection = D_Up;
 	int level = 1;
@@ -15,6 +16,7 @@ class Player : public Entity
 	std::vector<Bullet*> bulletList; // trỏ đến
 	float count_Spawn = 3.0f;
 	float count_Shoot = 0.5f;
+	float count_Shield = 5.0f;
 
 public:
 	int LastReceiveTime = -1;
@@ -34,5 +36,8 @@ public:
 	void ApplyVelocity();
 	void ChangeHP(int amount);
 	void ZeroVelocity() { velocity = D3DXVECTOR2(0, 0); }
+	void ApplyShield() { count_Shield = shieldTime; }
+	void LevelUp() { level++; if (level > 2) level = 2; }
+	int GetDamage() { return level; }
 };
 

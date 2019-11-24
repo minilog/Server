@@ -11,6 +11,7 @@ class Bullet : public Entity
 
 public:
 	int PlayerID = -1; // là của người chơi nào
+	int Damage = 1;
 
 public:
 	Bullet(int _ID, int _playerID)
@@ -45,12 +46,13 @@ public:
 		_os.Write((int)(destroyPosition.y * 10), NBit_Position);
 	}
 
-	void Spawn(D3DXVECTOR2 _pos, Direction _dir)
+	void Spawn(D3DXVECTOR2 _pos, Direction _dir, int damage)
 	{
 		IsDelete = false;
 
 		position = _pos;
 		spawnPosition = _pos;
+		Damage = damage;
 
 		// set spawn position
 		if (_dir == D_Left)

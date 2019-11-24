@@ -61,6 +61,8 @@ void Player::Update(float _dt)
 
 			// spawn NPC tại đây
 			IsDelete = false;
+			ApplyShield();
+			level = 1;
 		}
 	}
 	else
@@ -75,6 +77,8 @@ void Player::Update(float _dt)
 
 	shootDirList.erase(shootDirList.begin());
 	shootDirList.push_back(shootDirection);
+
+	count_Shield -= _dt;
 }
 
 void Player::Update_Rollback(float _dt)
@@ -125,6 +129,15 @@ void Player::Write(OutputMemoryBitStream & _os)
 	_os.Write(direction, NBit_Direction);
 	_os.Write(shootDirection, NBit_Direction);
 	_os.Write(IsDelete);
+	if (count_Shield > 0)
+	{
+		_os.Write(true); // đang có shield
+	}
+	else
+	{
+		_os.Write(false); // đang ko có shiled
+	}
+	_os.Write(level, 3);
 }	
 
 void Player::SetPositionInPreviousFrame(int _preFrame)
@@ -159,7 +172,7 @@ Bullet* Player::SpawnBulletInPreviousFrame(int _preFrame)
 	{
 		if (bullet->IsDelete == true)
 		{
-			bullet->Spawn(positionList[30 - _preFrame - 1], shootDirList[30 - _preFrame - 1]);
+			bullet->Spawn(positionList[30 - _preFrame - 1], shootDirList[30 - _preFrame - 1], level);
 			return bullet;
 			break;
 		}
@@ -192,6 +205,9 @@ void Player::ApplyVelocity()
 
 void Player::ChangeHP(int amount)
 {
+	if (amount < 0 && count_Shield > 0)
+		return;
+
 	HP += amount;
 	if (HP <= 0)
 	{
