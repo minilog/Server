@@ -21,6 +21,8 @@ class Player : public Entity
 public:
 	int LastReceiveTime = -1;
 	int LastShootTime = -1;
+	int Score = 0;
+	D3DXVECTOR2 ScorePosition = D3DXVECTOR2(0, 0);
 
 public:
 	Player(int _ID);
@@ -39,5 +41,6 @@ public:
 	void ApplyShield() { count_Shield = shieldTime; }
 	void LevelUp() { level++; if (level > 2) level = 2; }
 	int GetDamage() { return level; }
+	void WriteScorePosition(OutputMemoryBitStream& os);
 };
 

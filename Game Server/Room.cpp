@@ -51,7 +51,7 @@ void Room::Update(float dt)
 					{
 						player->ZeroVelocity();
 						npc->ZeroVelocity();
-						npc->CheckCollision(player); // sửa lỗi kẹt lúc spawn
+						//npc->CheckCollision(player); // sửa lỗi kẹt lúc spawn
 					}
 				}
 			}
@@ -63,7 +63,7 @@ void Room::Update(float dt)
 				{
 					if (GameCollision::IsCollideInNextFrame(player, player2, dt))
 					{
-						player->CheckCollision(player2);
+						//player->CheckCollision(player2);
 						player->ZeroVelocity();
 						player2->ZeroVelocity();
 					}
@@ -77,6 +77,8 @@ void Room::Update(float dt)
 				{
 					protectItem->IsDelete = true;
 					player->ApplyShield();
+					player->Score += 100;
+					player->ScorePosition = protectItem->GetPosition();
 				}
 			}
 			if (!upgradeItem->IsDelete)
@@ -85,6 +87,8 @@ void Room::Update(float dt)
 				{
 					upgradeItem->IsDelete = true;
 					player->LevelUp();
+					player->Score += 100;
+					player->ScorePosition = upgradeItem->GetPosition();
 				}
 			}
 		}
@@ -152,6 +156,18 @@ void Room::Update(float dt)
 						npc->ChangeHP(-bullet->Damage);
 						bullet->IsDelete = true;
 						bullet->ApplyDestroyPosition();
+						// nếu npc bị tiêu diệt thì thêm điểm cho players và set vị trí spawn điểm
+						if (npc->IsDelete)
+						{
+							for (auto player : playerList)
+							{
+								if (player->ID == bullet->PlayerID)
+								{
+									player->Score += 100;
+									player->ScorePosition = npc->GetPosition();
+								}
+							}
+						}
 					}
 				}
 			}
@@ -166,6 +182,19 @@ void Room::Update(float dt)
 						player->ChangeHP(-bullet->Damage);
 						bullet->IsDelete = true;
 						bullet->ApplyDestroyPosition();
+
+						// nếu player bị tiêu diệt thì thêm điểm cho player và set vị trí spawn điểm
+						if (player->IsDelete)
+						{
+							for (auto player2 : playerList)
+							{
+								if (player2->ID == bullet->PlayerID)
+								{
+									player2->Score += 100;
+									player2->ScorePosition = player->GetPosition();
+								}
+							}
+						}
 					}
 				}
 			}
@@ -177,7 +206,7 @@ void Room::Update(float dt)
 	{
 		if (!npc->IsDelete)
 		{
-			// npcs va chạm bullets
+			// npcs va chạm npcs
 			for (auto npc2 : npcList)
 			{
 				if (!npc2->IsDelete && npc->ID != npc2->ID)
@@ -240,6 +269,14 @@ void Room::Update(float dt)
 			// gửi item
 			protectItem->Write(os);
 			upgradeItem->Write(os);
+			// gửi pointed
+			for (auto player : playerList)
+			{
+				if (player->ID == client->PlayerID)
+				{
+					player->WriteScorePosition(os);
+				}
+			}
 
 			// gửi đuôi packet
 			os.Write(PT_World, NBit_PacketType);
@@ -333,7 +370,7 @@ void Room::HandleInputList()
 							if (GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f))
 							{
 								player->ZeroVelocity();
-								player->CheckCollision(npc);
+								//player->CheckCollision(npc);
 							}
 						}
 					}
@@ -345,7 +382,7 @@ void Room::HandleInputList()
 							if (GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f))
 							{
 								player->ZeroVelocity();
-								player->CheckCollision(player2);
+								//player->CheckCollision(player2);
 							}
 						}
 					}
@@ -427,6 +464,19 @@ void Room::HandleShootList()
 							player->ChangeHP(-bullet->Damage);
 							bullet->IsDelete = true;
 							bullet->ApplyDestroyPosition();
+
+							// nếu player bị tiêu diệt thì thêm điểm cho player và set vị trí spawn điểm
+							if (player->IsDelete)
+							{
+								for (auto player2 : playerList)
+								{
+									if (player2->ID == bullet->PlayerID)
+									{
+										player2->Score += 100;
+										player2->ScorePosition = player->GetPosition();
+									}
+								}
+							}
 						}
 					}
 				}
@@ -441,6 +491,19 @@ void Room::HandleShootList()
 							npc->ChangeHP(-bullet->Damage);
 							bullet->IsDelete = true;
 							bullet->ApplyDestroyPosition();
+
+							// nếu npc bị tiêu diệt thì thêm điểm cho players và set vị trí spawn điểm
+							if (npc->IsDelete)
+							{
+								for (auto player : playerList)
+								{
+									if (player->ID == bullet->PlayerID)
+									{
+										player->Score += 100;
+										player->ScorePosition = npc->GetPosition();
+									}
+								}
+							}
 						}
 					}
 				}

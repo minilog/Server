@@ -138,6 +138,7 @@ void Player::Write(OutputMemoryBitStream & _os)
 		_os.Write(false); // đang ko có shiled
 	}
 	_os.Write(level, 3);
+	_os.Write(Score, NBit_Position);
 }	
 
 void Player::SetPositionInPreviousFrame(int _preFrame)
@@ -214,4 +215,13 @@ void Player::ChangeHP(int amount)
 		HP = 2;
 		IsDelete = true;
 	}
+}
+
+void Player::WriteScorePosition(OutputMemoryBitStream & os)
+{
+	int x = int(ScorePosition.x * 10);
+	int y = int(ScorePosition.y * 10);
+
+	os.Write(x, NBit_Position);
+	os.Write(y, NBit_Position);
 }
