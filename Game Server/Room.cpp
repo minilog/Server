@@ -40,7 +40,7 @@ void Room::Update(float dt)
 		player->ApplyVelocity();
 	}
 
-	// thực hiện va chạm cho players
+	// thực hiện va chạm cho players >-)
 	for (auto player : playerList)
 	{
 		if (!player->IsDelete)
@@ -48,12 +48,17 @@ void Room::Update(float dt)
 			// players va chạm npcs
 			for (auto npc : npcList)
 			{
-				if (!npc->IsDelete && 
-					GameCollision::IsCollideInNextFrame(player, npc, dt))
+				if (!npc->IsDelete)
 				{
-					player->ZeroVelocity();
-					npc->ZeroVelocity();
-					//npc->CheckCollision(player); // sửa lỗi kẹt lúc spawn
+					if (GameCollision::IsCollideInNextFrame(player, npc, dt, 1))
+					{
+						player->ZeroVelocity();
+					}
+					if (GameCollision::IsCollideInNextFrame(npc, player, dt, 1))
+					{
+						npc->ZeroVelocity();
+						npc->CheckCollision(player);
+					}
 				}
 			}
 
@@ -62,10 +67,9 @@ void Room::Update(float dt)
 			{
 				if (!player2->IsDelete &&
 					player->ID != player2->ID &&
-					GameCollision::IsCollideInNextFrame(player, player2, dt))
+					GameCollision::IsCollideInNextFrame(player, player2, dt, 1))
 				{
 					player->ZeroVelocity();
-					player2->ZeroVelocity();
 				}
 			}
 
@@ -89,6 +93,7 @@ void Room::Update(float dt)
 		}
 	}
 
+	// sau khi check vận tốc có bằng không hay không thì cập nhật
 	for (auto player : playerList)
 	{
 		player->Update(dt);
@@ -127,7 +132,7 @@ void Room::Update(float dt)
 			{
 				if (!npc->IsDelete)
 				{
-					if (GameCollision::IsCollideInNextFrame(npc, brick, dt))
+					if (GameCollision::IsCollideInNextFrame(npc, brick, dt, 1))
 					{
 						npc->ZeroVelocity();
 						npc->CheckCollision(brick);
@@ -204,14 +209,12 @@ void Room::Update(float dt)
 			// npcs va chạm npcs
 			for (auto npc2 : npcList)
 			{
-				if (!npc2->IsDelete && npc->ID != npc2->ID)
+				if (!npc2->IsDelete &&
+					npc->ID != npc2->ID &&
+					GameCollision::IsCollideInNextFrame(npc, npc2, dt, 1))
 				{
-					if (GameCollision::IsCollideInNextFrame(npc, npc2, dt))
-					{
-						npc->CheckCollision(npc2);
-						npc->ZeroVelocity();
-						npc2->ZeroVelocity();
-					}
+					npc->CheckCollision(npc2);	
+					npc->ZeroVelocity();
 				}
 			}
 		}
@@ -308,7 +311,7 @@ void Room::HandleInputList()
 		// xử lý chính
 		{
 			int tick2 = (int)GetTickCount();
-			int nFramePrevious = (int)((tick2 - input.time + 12) / 16.6667f); // số frame đã trôi qua
+			int nFramePrevious = (int)((tick2 - input.time + 15) / 15); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
@@ -362,24 +365,21 @@ void Room::HandleInputList()
 				// player va chạm với npcs
 				for (auto npc : npcList)
 				{
-					if (!npc->IsDelete)
+					if (!npc->IsDelete &&
+						GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f, 1))
 					{
-						if (GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f))
-						{
-							player->ZeroVelocity();
-						}
+						player->ZeroVelocity();
 					}
 				}
 
 				// player va chạm với players
 				for (auto player2 : playerList)
 				{
-					if (!player2->IsDelete && player->ID != player2->ID)
+					if (!player2->IsDelete &&
+						player->ID != player2->ID &&
+						GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f, 1))
 					{
-						if (GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f))
-						{
-							player->ZeroVelocity();
-						}
+						player->ZeroVelocity();
 					}
 				}
 

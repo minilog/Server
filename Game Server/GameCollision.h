@@ -21,7 +21,7 @@ class GameCollision
 {
 public:
 	// tính toán frame tiếp theo có va chạm hay không
-	static bool	IsCollideInNextFrame(Entity* _en1, Entity* _en2, float _dt);
+	static bool	IsCollideInNextFrame(Entity* _en1, Entity* _en2, float _dt, int type = 0);
 
 	// xét cho enity1
 	static CollisionResult Get_CollisionResult(Entity* e1, Entity* e2);
