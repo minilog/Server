@@ -31,65 +31,60 @@ void Room::Update(float dt)
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
-	HandleShootList();
+	// xử lý input trước :P
 	HandleInputList();
+	HandleShootList();
 
 	for (auto player : playerList)
 	{
 		player->ApplyVelocity();
 	}
 
+	// thực hiện va chạm cho players
 	for (auto player : playerList)
 	{
 		if (!player->IsDelete)
-		{	// players va chạm npcs
+		{	
+			// players va chạm npcs
 			for (auto npc : npcList)
 			{
-				if (!npc->IsDelete)
+				if (!npc->IsDelete && 
+					GameCollision::IsCollideInNextFrame(player, npc, dt))
 				{
-					if (GameCollision::IsCollideInNextFrame(player, npc, dt))
-					{
-						player->ZeroVelocity();
-						npc->ZeroVelocity();
-						//npc->CheckCollision(player); // sửa lỗi kẹt lúc spawn
-					}
+					player->ZeroVelocity();
+					npc->ZeroVelocity();
+					//npc->CheckCollision(player); // sửa lỗi kẹt lúc spawn
 				}
 			}
 
 			// players va chạm players
 			for (auto player2 : playerList)
 			{
-				if (!player2->IsDelete && player->ID != player2->ID)
+				if (!player2->IsDelete &&
+					player->ID != player2->ID &&
+					GameCollision::IsCollideInNextFrame(player, player2, dt))
 				{
-					if (GameCollision::IsCollideInNextFrame(player, player2, dt))
-					{
-						//player->CheckCollision(player2);
-						player->ZeroVelocity();
-						player2->ZeroVelocity();
-					}
+					player->ZeroVelocity();
+					player2->ZeroVelocity();
 				}
 			}
 
 			// plays va chạm items
-			if (!protectItem->IsDelete)
+			if (!protectItem->IsDelete &&
+				GameCollision::IsCollideInNextFrame(player, protectItem, dt))
 			{
-				if (GameCollision::IsCollideInNextFrame(player, protectItem, dt))
-				{
 					protectItem->IsDelete = true;
 					player->ApplyShield();
 					player->Score += 100;
 					player->ScorePosition = protectItem->GetPosition();
-				}
 			}
-			if (!upgradeItem->IsDelete)
+			if (!upgradeItem->IsDelete &&
+				GameCollision::IsCollideInNextFrame(player, upgradeItem, dt))
 			{
-				if (GameCollision::IsCollideInNextFrame(player, upgradeItem, dt))
-				{
 					upgradeItem->IsDelete = true;
 					player->LevelUp();
 					player->Score += 100;
 					player->ScorePosition = upgradeItem->GetPosition();
-				}
 			}
 		}
 	}
@@ -298,6 +293,7 @@ void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 	if (isPlaying)
 	{
 		_os.Write(startingTime, NBit_Time);
+		_os.Write((int)timeUp, NBit_Time);
 	}
 }
 
@@ -311,7 +307,8 @@ void Room::HandleInputList()
 
 		// xử lý chính
 		{
-			int nFramePrevious = (int)(((int)GetTickCount() - input.time) / 16.67f); // số frame đã trôi qua
+			int tick2 = (int)GetTickCount();
+			int nFramePrevious = (int)((tick2 - input.time + 12) / 16.6667f); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
@@ -342,13 +339,12 @@ void Room::HandleInputList()
 			player->LastReceiveTime = input.time;
 
 			printf("Receive input from Player %i, Room %i, Dir = %i\n", input.playerID, ID, input.direction);
-			printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
-			
-			player->SetPositionInPreviousFrame(nFramePrevious);
-			player->SetDirection(input.direction);
-			player->ApplyVelocity();
 
-			// va chạm 1 lần trước
+			player->SetPositionInPreviousFrame(nFramePrevious);
+			
+			player->SetDirection(input.direction);
+
+			// va chạm với gạch 1 lần trước (đảm bảo position đúng)
 			for (auto brick : map->GetBrickList())
 			{
 				if (!brick->IsDelete)
@@ -356,50 +352,49 @@ void Room::HandleInputList()
 					player->CheckCollision(brick);
 				}
 			}
+			printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 
 			// chạy frame liên tục cho đến hiện tại
+			for (int i = 0; i < nFramePrevious; i++)
 			{
-				for (int i = 0; i < nFramePrevious; i++)
+				player->ApplyVelocity();
+
+				// player va chạm với npcs
+				for (auto npc : npcList)
 				{
-					player->ApplyVelocity();
-
-					for (auto npc : npcList)
+					if (!npc->IsDelete)
 					{
-						if (!npc->IsDelete)
+						if (GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f))
 						{
-							if (GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f))
-							{
-								player->ZeroVelocity();
-								//player->CheckCollision(npc);
-							}
+							player->ZeroVelocity();
 						}
 					}
-
-					for (auto player2 : playerList)
-					{
-						if (!player2->IsDelete && player->ID != player2->ID)
-						{
-							if (GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f))
-							{
-								player->ZeroVelocity();
-								//player->CheckCollision(player2);
-							}
-						}
-					}
-
-					player->Update_Rollback(1 / 60.f);
-
-					for (auto brick : map->GetBrickList())
-					{
-						if (!brick->IsDelete)
-						{
-							// player va chạm bricks
-							player->CheckCollision(brick);
-						}
-					}
-
-					printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 				}
+
+				// player va chạm với players
+				for (auto player2 : playerList)
+				{
+					if (!player2->IsDelete && player->ID != player2->ID)
+					{
+						if (GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f))
+						{
+							player->ZeroVelocity();
+						}
+					}
+				}
+
+				player->Update_Rollback(1 / 60.f);
+
+				// player va chạm bricks
+				for (auto brick : map->GetBrickList())
+				{
+					if (!brick->IsDelete)
+					{
+						player->CheckCollision(brick);
+					}
+				}
+
+				printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 			}
 		}
 	}
@@ -646,4 +641,3 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 		printf("Game in room = %i start\n", ID);
 	}
 }
-

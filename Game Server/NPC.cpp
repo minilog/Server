@@ -8,8 +8,8 @@ NPC::NPC(int _ID)
 
 	Type = ET_NPC;
 	IsDelete = true;
-	width = 28;
-	height = 28;
+	width = 32;
+	height = 32;
 }
 
 void NPC::Update(float _dt)

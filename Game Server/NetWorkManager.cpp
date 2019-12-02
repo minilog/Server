@@ -76,9 +76,6 @@ void NetWorkManager::ReceivePacket()
 								os.Write((int)GetTickCount(), NBit_Time);
 
 								socket->Send(os);
-
-			/*					printf("Reply sync time PlayerID = %i, RoomID = %i, Time = %i\n", 
-									socket->PlayerID, socket->PlayerRoomID, (int)GetTickCount());*/
 							}
 						}
 
