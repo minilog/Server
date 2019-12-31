@@ -5,8 +5,8 @@ Player::Player(int _ID)
 {
 	ID = _ID;
 	Type = ET_Player;
-	width = 32;
-	height = 32;
+	width = 30;
+	height = 30;
 
 	switch (_ID)
 	{
@@ -94,6 +94,8 @@ void Player::CheckCollision(Entity * e)
 	if (IsDelete)
 		return;
 
+
+
 	if (e->Type == ET_MetalBrick || e->Type == ET_NormalBrick || e->Type == ET_Boundary || e->Type == ET_Water)
 	{
 		CollisionResult cR = GameCollision::Get_CollisionResult(this, e);
@@ -126,7 +128,10 @@ void Player::Write(OutputMemoryBitStream & _os)
 
 	_os.Write(x, NBit_Position);
 	_os.Write(y, NBit_Position);
+
 	_os.Write(direction, NBit_Direction);
+
+
 	_os.Write(shootDirection, NBit_Direction);
 	_os.Write(IsDelete);
 	if (count_Shield > 0)

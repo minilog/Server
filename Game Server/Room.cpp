@@ -31,7 +31,7 @@ void Room::Update(float dt)
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
-	// xử lý input trước :P
+	// xử lý data từ các client trước :P
 	HandleInputList();
 	HandleShootList();
 
@@ -40,13 +40,11 @@ void Room::Update(float dt)
 		player->ApplyVelocity();
 	}
 
-	// thực hiện va chạm cho players >-)
 	for (auto player : playerList)
 	{
 		if (!player->IsDelete)
 		{	
-			// players va chạm npcs
-			for (auto npc : npcList)
+			for (auto npc : npcList) // players va chạm npcs
 			{
 				if (!npc->IsDelete)
 				{
@@ -61,19 +59,15 @@ void Room::Update(float dt)
 					}
 				}
 			}
-
-			// players va chạm players
-			for (auto player2 : playerList)
+			for (auto player2 : playerList) // players va chạm với nhau
 			{
-				if (!player2->IsDelete &&
-					player->ID != player2->ID &&
-					GameCollision::IsCollideInNextFrame(player, player2, dt, 1))
+				if (!player2->IsDelete && player->ID != player2->ID && GameCollision::IsCollideInNextFrame(player, player2, dt, 1))
 				{
 					player->ZeroVelocity();
 				}
 			}
 
-			// plays va chạm items
+			// players va chạm items
 			if (!protectItem->IsDelete &&
 				GameCollision::IsCollideInNextFrame(player, protectItem, dt))
 			{
@@ -103,14 +97,11 @@ void Room::Update(float dt)
 	{
 		if (!brick->IsDelete)
 		{
-			// players va chạm bricks
-			for (auto player : playerList)
+			for (auto player : playerList) 	// players va chạm bricks
 			{
 				player->CheckCollision(brick);
 			}
-
-			// bullets va chạm bricks
-			for (auto bullet : bulletList)
+			for (auto bullet : bulletList)  // bullets va chạm bricks
 			{
 				if (!bullet->IsDelete)
 				{
@@ -126,9 +117,7 @@ void Room::Update(float dt)
 					}
 				}
 			}
-
-			// npcs va chạm bricks
-			for (auto npc : npcList)
+			for (auto npc : npcList) // npcs va chạm bricks
 			{
 				if (!npc->IsDelete)
 				{
@@ -146,8 +135,7 @@ void Room::Update(float dt)
 	{
 		if (!bullet->IsDelete)
 		{
-			// npcs va chạm bullets
-			for (auto npc : npcList)
+			for (auto npc : npcList) // npcs va chạm bullets
 			{
 				if (!npc->IsDelete)
 				{
@@ -172,8 +160,7 @@ void Room::Update(float dt)
 				}
 			}
 
-			// players va chạm bullets
-			for (auto player : playerList)
+			for (auto player : playerList) 	// players va chạm bullets
 			{
 				if (!player->IsDelete && player->ID != bullet->PlayerID)
 				{
@@ -276,9 +263,6 @@ void Room::Update(float dt)
 				}
 			}
 
-			// gửi đuôi packet
-			os.Write(PT_World, NBit_PacketType);
-
 			client->Send(os);
 		}
 	}
@@ -300,9 +284,8 @@ void Room::WriteUpdateRooms(OutputMemoryBitStream & _os)
 	}
 }
 
-void Room::HandleInputList()
+void Room::HandleInputList() // xử lý rollback di chuyển của players
 {
-	// xử lý rollback di chuyển của players
 	while (!pInputList.empty())
 	{
 		PlayerInput input = pInputList.at(pInputList.size() - 1);
@@ -310,8 +293,8 @@ void Room::HandleInputList()
 
 		// xử lý chính
 		{
-			int tick2 = (int)GetTickCount();
-			int nFramePrevious = (int)((tick2 - input.time + 15) / 15); // số frame đã trôi qua
+			int tick = (int)GetTickCount();
+			int NFramePre = (int)(((int)GetTickCount() - input.time + 8) / 15.f); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
@@ -326,26 +309,22 @@ void Room::HandleInputList()
 			if (player->IsDelete)
 				return;
 
-			// nhận ngay tức thì => ko roll back
-			if (nFramePrevious <= 0)
+			if (NFramePre <= 0) // nhận ngay tức thì => ko roll back
 			{
-				player->SetDirection(input.direction);
-				player->ApplyVelocity();
 				printf("Receive input from Player %i, Room %i, Dir = %i\n", input.playerID, ID, input.direction);
+				player->SetDirection(input.direction);	
+				player->LastReceiveTime = input.time;
 				return;
 			}
 
 			// không nhận các packet trễ
-			if (nFramePrevious >= 16 || player->LastReceiveTime >= input.time)
+			if (NFramePre >= 16 || player->LastReceiveTime >= input.time)
 				return;
 
-			player->LastReceiveTime = input.time;
-
 			printf("Receive input from Player %i, Room %i, Dir = %i\n", input.playerID, ID, input.direction);
-
-			player->SetPositionInPreviousFrame(nFramePrevious);
-			
+			player->SetPositionInPreviousFrame(NFramePre);
 			player->SetDirection(input.direction);
+			player->LastReceiveTime = input.time;
 
 			// va chạm với gạch 1 lần trước (đảm bảo position đúng)
 			for (auto brick : map->GetBrickList())
@@ -358,12 +337,11 @@ void Room::HandleInputList()
 			printf("(%i, %i)\n", (int)player->GetPosition().x, (int)player->GetPosition().y);
 
 			// chạy frame liên tục cho đến hiện tại
-			for (int i = 0; i < nFramePrevious; i++)
+			for (int i = 0; i < NFramePre; i++)
 			{
 				player->ApplyVelocity();
 
-				// player va chạm với npcs
-				for (auto npc : npcList)
+				for (auto npc : npcList) // player va chạm npcs
 				{
 					if (!npc->IsDelete &&
 						GameCollision::IsCollideInNextFrame(player, npc, 1 / 60.0f, 1))
@@ -372,12 +350,9 @@ void Room::HandleInputList()
 					}
 				}
 
-				// player va chạm với players
-				for (auto player2 : playerList)
+				for (auto p2 : playerList) // player va chạm players khác
 				{
-					if (!player2->IsDelete &&
-						player->ID != player2->ID &&
-						GameCollision::IsCollideInNextFrame(player, player2, 1 / 60.0f, 1))
+					if (!p2->IsDelete && player->ID != p2->ID && GameCollision::IsCollideInNextFrame(player, p2, 1 / 60.0f, 1))
 					{
 						player->ZeroVelocity();
 					}
@@ -385,8 +360,7 @@ void Room::HandleInputList()
 
 				player->Update_Rollback(1 / 60.f);
 
-				// player va chạm bricks
-				for (auto brick : map->GetBrickList())
+				for (auto brick : map->GetBrickList()) // player va chạm bricks
 				{
 					if (!brick->IsDelete)
 					{

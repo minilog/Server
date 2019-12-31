@@ -9,44 +9,45 @@
 #include <thread>
 #pragma comment(lib,"WS2_32")
 
-void Receive_thread(NetWorkManager* net)
+void ReceivePacket(NetWorkManager* network)
 {
 	while (1)
 	{
-		net->ReceivePacket();
+		network->ReceivePacket();
 	}
 }
 
 int main()
 {
 	srand(time(NULL));
-	NetWorkManager* net_work = new NetWorkManager();
-	GameTime *_gameTime = new GameTime();
-	_gameTime->init();
-	float _detalTime = 0;
-	float _lastTime = 0;
+	NetWorkManager* network = new NetWorkManager();
+	GameTime *gameTime = new GameTime();
+	gameTime->init();
 
-	const float tickPerFrame = 1.0f / 60;
-
-	int temp = 0, temp1 = 0;
-
+	// tạo thêm thread
 	MSG msg;
-	std::thread task_receive_packet(Receive_thread, net_work);
-	task_receive_packet.detach();
+	std::thread Thread(ReceivePacket, network);
+	Thread.detach();
+
+	float detalTime = 0;
+	float lastTime = 0;
 
 	while (1)
 	{
-		_gameTime->update();
-		_detalTime = _gameTime->getTotalTime() - _lastTime;
+		gameTime->update();
+		detalTime = gameTime->getTotalTime() - lastTime;
 
-		if (_detalTime >= tickPerFrame)
+		if (detalTime >= 1.0f / 60)
 		{
-			_lastTime += tickPerFrame;
-			net_work->Update(1.0f / 60);//_detalTime
+			lastTime += 1.0f / 60;
+
+			// thiết lập thời gian bắt đầu cho frame 
+			// ...
+			network->Update(1.0f / 60);//_detalTime
 		}
 		else
 		{
-			Sleep((tickPerFrame - _detalTime) * 1000.0f);
+			Sleep((1.0f / 60 - detalTime) * 1000.0f);
 		}
 	}
 
