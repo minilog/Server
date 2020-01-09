@@ -144,6 +144,7 @@ void Room::Update(float dt)
 						npc->ChangeHP(-bullet->Damage);
 						bullet->IsDelete = true;
 						bullet->ApplyDestroyPosition();
+
 						// nếu npc bị tiêu diệt thì thêm điểm cho players và set vị trí spawn điểm
 						if (npc->IsDelete)
 						{

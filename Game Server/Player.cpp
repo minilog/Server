@@ -31,6 +31,9 @@ Player::Player(int _ID)
 		positionList.push_back(position);
 		shootDirList.push_back(D_Stand);
 	}
+
+	LastReceiveTime = (int)GetTickCount();
+	LastShootTime = (int)GetTickCount();
 }
 
 void Player::Update(float _dt)
