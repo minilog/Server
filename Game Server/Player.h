@@ -5,7 +5,7 @@
 
 class Player : public Entity
 {
-	const float speed = 150.f;
+	const float speed = 130.f;
 	const float shieldTime = 5.0f;
 	Direction direction = D_Stand;
 	Direction shootDirection = D_Up;

@@ -12,14 +12,7 @@ Room::Room(int _networkID)
 		playerReadyList.push_back(false);
 	}
 
-	// tạo 3 NPCs
-	for (auto i = 0; i < 3; i++)
-	{
-		NPC* npc = new NPC(i);
-		npcList.push_back(npc);
-	}
-
-	// tạo 2 items
+	// tạo 2 ITEMS
 	protectItem = new ProtectItem(D3DXVECTOR2(0, 0));
 	protectItem->IsDelete = true;
 	upgradeItem = new UpgradeItem(D3DXVECTOR2(0, 0));
@@ -31,7 +24,7 @@ void Room::Update(float dt)
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
-	// xử lý data từ các client trước :P
+	// xử lý DATA từ các client :P
 	HandleInputList();
 	HandleShootList();
 
@@ -44,7 +37,7 @@ void Room::Update(float dt)
 	{
 		if (!player->IsDelete)
 		{	
-			for (auto npc : npcList) // players va chạm npcs
+			for (auto npc : npcList) // PLAYERs va chạm NPCs
 			{
 				if (!npc->IsDelete)
 				{
@@ -59,7 +52,7 @@ void Room::Update(float dt)
 					}
 				}
 			}
-			for (auto player2 : playerList) // players va chạm với nhau
+			for (auto player2 : playerList) // PLAYERs va chạm PLAYERs
 			{
 				if (!player2->IsDelete && player->ID != player2->ID && GameCollision::IsCollideInNextFrame(player, player2, dt, 1))
 				{
@@ -67,17 +60,15 @@ void Room::Update(float dt)
 				}
 			}
 
-			// players va chạm items
-			if (!protectItem->IsDelete &&
-				GameCollision::IsCollideInNextFrame(player, protectItem, dt))
+			// PLAYERs va chạm ITEMs
+			if (!protectItem->IsDelete && GameCollision::IsCollideInNextFrame(player, protectItem, dt, 1))
 			{
 					protectItem->IsDelete = true;
 					player->ApplyShield();
 					player->Score += 100;
 					player->ScorePosition = protectItem->GetPosition();
 			}
-			if (!upgradeItem->IsDelete &&
-				GameCollision::IsCollideInNextFrame(player, upgradeItem, dt))
+			if (!upgradeItem->IsDelete && GameCollision::IsCollideInNextFrame(player, upgradeItem, dt, 1))
 			{
 					upgradeItem->IsDelete = true;
 					player->LevelUp();
@@ -97,11 +88,11 @@ void Room::Update(float dt)
 	{
 		if (!brick->IsDelete)
 		{
-			for (auto player : playerList) 	// players va chạm bricks
+			for (auto player : playerList) 	// PLAYERs va chạm BRICKs
 			{
 				player->CheckCollision(brick);
 			}
-			for (auto bullet : bulletList)  // bullets va chạm bricks
+			for (auto bullet : bulletList)  // BULLETs va chạm BRICKs
 			{
 				if (!bullet->IsDelete)
 				{
@@ -117,7 +108,7 @@ void Room::Update(float dt)
 					}
 				}
 			}
-			for (auto npc : npcList) // npcs va chạm bricks
+			for (auto npc : npcList) // NPCs va chạm BRICKs
 			{
 				if (!npc->IsDelete)
 				{
@@ -135,9 +126,9 @@ void Room::Update(float dt)
 	{
 		if (!bullet->IsDelete)
 		{
-			for (auto npc : npcList) // npcs va chạm bullets
+			for (auto npc : npcList) // NPCs va chạm BULLETs
 			{
-				if (!npc->IsDelete)
+				if (!npc->IsDelete && bullet->PlayerID != 4)
 				{
 					if (GameCollision::IsCollideInNextFrame(npc, bullet, dt))
 					{
@@ -161,7 +152,7 @@ void Room::Update(float dt)
 				}
 			}
 
-			for (auto player : playerList) 	// players va chạm bullets
+			for (auto player : playerList) 	// PLAYERs va chạm BULLETs
 			{
 				if (!player->IsDelete && player->ID != bullet->PlayerID)
 				{
@@ -189,13 +180,11 @@ void Room::Update(float dt)
 		}
 	}
 
-	// npcs va chạm npcs
 	for (auto npc : npcList)
 	{
 		if (!npc->IsDelete)
 		{
-			// npcs va chạm npcs
-			for (auto npc2 : npcList)
+			for (auto npc2 : npcList)	// NPCs va chạm NPCs
 			{
 				if (!npc2->IsDelete &&
 					npc->ID != npc2->ID &&
@@ -294,8 +283,7 @@ void Room::HandleInputList() // xử lý rollback di chuyển của players
 
 		// xử lý chính
 		{
-			int tick = (int)GetTickCount();
-			int NFramePre = (int)(((int)GetTickCount() - input.time + 8) / 15.f); // số frame đã trôi qua
+			int NFramePre = (int)(((int)GetTickCount() - input.time + 5) / 15.f); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
@@ -611,6 +599,19 @@ void Room::HandlePlayerReadyOrCancel(TCPSocketPtr _playerSocket)
 					player->AddBullet(bullet);
 				}
 			}
+		}
+
+		// tạo 3 NPCs
+		for (auto i = 0; i < 3; i++)
+		{
+			NPC* npc = new NPC(i);
+			npcList.push_back(npc);
+
+			// tạo BULLET cho mỗi NPC
+			Bullet* bullet = new Bullet(i, 4);
+			bulletList.push_back(bullet);
+			
+			npc->AddBulletPtr(bullet);
 		}
 
 		printf("Game in room = %i start\n", ID);

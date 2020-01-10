@@ -10,6 +10,8 @@ NPC::NPC(int _ID)
 	IsDelete = true;
 	width = 32;
 	height = 32;
+
+	count_ShootBullet = rand() % 8;
 }
 
 void NPC::Update(float _dt)
@@ -87,6 +89,13 @@ void NPC::Update(float _dt)
 			break;
 		}
 		return;
+	}
+
+	count_ShootBullet -= _dt;
+	if (count_ShootBullet < 0 && bullet->IsDelete)
+	{
+		count_ShootBullet = 4;
+		bullet->Spawn(position, direction, 1);
 	}
 
 	position += velocity * _dt;
