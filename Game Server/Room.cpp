@@ -54,6 +54,7 @@ void Room::Update(float dt)
 					}
 				}
 			}
+
 			for (auto player2 : playerList) // PLAYERs va chạm PLAYERs
 			{
 				if (!player2->IsDelete && player->ID != player2->ID && GameCollision::IsCollideInNextFrame(player, player2, dt, 1))
@@ -287,7 +288,7 @@ void Room::HandleInputList() // xử lý rollback di chuyển của players
 
 		// xử lý chính
 		{
-			int NFramePre = (int)(((int)GetTickCount() - input.time + 5) / 15.f); // số frame đã trôi qua
+			int NFramePre = (int)(((int)GetTickCount() - input.time + 7) / 15.f); // số frame đã trôi qua
 
 			Player* player = nullptr; // xác định player gửi input
 			for (auto p : playerList)
