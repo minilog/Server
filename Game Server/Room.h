@@ -34,6 +34,7 @@ class Room
 	std::vector<TCPSocketPtr> clientList;
 	const float time_StartGame = 3000;
 	const float timeUp = 10000;
+	float count_TimeUp = 10000;
 
 	// IN BATTLE
 	GameMap* map;

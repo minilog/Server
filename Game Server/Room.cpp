@@ -24,6 +24,8 @@ void Room::Update(float dt)
 	if (!isPlaying || !(GetTickCount() - startingTime >= time_StartGame))
 		return;
 
+	count_TimeUp -= dt;
+
 	// xử lý DATA từ các client :P
 	HandleInputList();
 	HandleShootList();
@@ -252,6 +254,8 @@ void Room::Update(float dt)
 					player->WriteScorePosition(os);
 				}
 			}
+			// gửi count_TimeUp
+			os.Write((int)(count_TimeUp * 10), NBit_Time);
 
 			client->Send(os);
 		}
